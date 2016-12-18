@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">InternetMeasurement</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="first_item">First item</string>
+    <string name="second_item">Second item</string>
+    <string name="third_item">Third item</string>
+    <string name="fourth_item">Fourth item</string>
+    <string name="spinner_title">Spinner</string>
+    <string name="measurement_type">Measurement Type</string>
+    <string name="date_picker_title">Wi-FI CONFIRMATION</string>
+    <string name="algorithm_type">Algorithm Type</string>
+</resources>
