@@ -1,4 +1,4 @@
-package internetmeasurement.android;
+package internetmeasurement.android.fragment.third;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import internetmeasurement.android.R;
 
 
 /**

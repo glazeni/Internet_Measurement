@@ -4,7 +4,7 @@
                 android:layout_height="match_parent"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/fragment_third_container"
-                tools:context="internetmeasurement.android.ThirdFragment">
+                tools:context=".fragment.third.ThirdFragment">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

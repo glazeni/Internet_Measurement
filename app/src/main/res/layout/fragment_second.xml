@@ -2,7 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="wrap_content"
              android:layout_height="match_parent"
-             tools:context="internetmeasurement.android.SecondFragment"
+             tools:context=".fragment.second.SecondFragment"
              android:id="@+id/fragment_second_container">
 
     <com.jjoe64.graphview.GraphView

@@ -1,6 +1,8 @@
-package internetmeasurement.android;
+package internetmeasurement.android.fragment.second;
 
 import com.jjoe64.graphview.GraphView;
+
+import internetmeasurement.android.main.MainActivity;
 
 /**
  * Created by jonas on 10.09.16.

@@ -1,4 +1,4 @@
-package internetmeasurement.android;
+package internetmeasurement.android.fragment.second;
 
 import android.graphics.Color;
 
@@ -8,10 +8,13 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
 
+import internetmeasurement.android.main.MainActivity;
+import internetmeasurement.android.R;
+
 /**
  * Created by jonas on 10.09.16.
  */
-public class AdvancedLineGraph extends BaseExample{
+public class AdvancedLineGraph extends BaseExample {
     private Series mSeries;
 
 

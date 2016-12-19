@@ -4,7 +4,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context="internetmeasurement.android.FirstFragment"
+            tools:context=".fragment.first.FirstFragment"
             android:id="@+id/fragment_first_container">
 
     <Button style="@style/Widget.AppCompat.Button.Colored"

@@ -1,4 +1,4 @@
-package internetmeasurement.android;
+package internetmeasurement.android.fragment.third;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
+
+import internetmeasurement.android.R;
 
 /**
  * Created by glazen on 18/12/16.

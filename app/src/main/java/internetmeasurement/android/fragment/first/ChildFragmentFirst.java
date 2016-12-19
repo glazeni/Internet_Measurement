@@ -1,4 +1,4 @@
-package internetmeasurement.android;
+package internetmeasurement.android.fragment.first;
 
 
 import android.content.Context;
@@ -17,6 +17,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import internetmeasurement.android.R;
 
 /**
  * A simple {@link Fragment} subclass.

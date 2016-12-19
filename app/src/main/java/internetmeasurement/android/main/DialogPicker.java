@@ -1,9 +1,11 @@
-package internetmeasurement.android;
+package internetmeasurement.android.main;
 
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+
+import internetmeasurement.android.R;
 
 /**
  * Created by glazen on 13/12/16.

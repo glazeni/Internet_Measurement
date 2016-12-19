@@ -1,4 +1,4 @@
-package internetmeasurement.android;
+package internetmeasurement.android.fragment.first;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import Client.TCPClient;
+import internetmeasurement.android.R;
 
 /**
  * A simple {@link Fragment} subclass.

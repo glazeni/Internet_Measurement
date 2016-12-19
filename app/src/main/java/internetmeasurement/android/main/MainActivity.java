@@ -1,4 +1,4 @@
-package internetmeasurement.android;
+package internetmeasurement.android.main;
 
 
 import android.content.DialogInterface;
@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+
+import internetmeasurement.android.R;
 
 
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {

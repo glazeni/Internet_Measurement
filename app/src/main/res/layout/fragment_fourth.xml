@@ -3,7 +3,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:id="@+id/fragment_fourth_container"
-             tools:context="internetmeasurement.android.FourthFragment">
+             tools:context=".fragment.fourth.FourthFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

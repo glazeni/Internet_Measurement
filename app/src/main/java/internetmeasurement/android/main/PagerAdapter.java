@@ -1,4 +1,4 @@
-package internetmeasurement.android;
+package internetmeasurement.android.main;
 
 /**
  * Created by glazen on 17/12/16.
@@ -6,6 +6,10 @@ package internetmeasurement.android;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import internetmeasurement.android.fragment.first.FirstFragment;
+import internetmeasurement.android.fragment.second.SecondFragment;
+import internetmeasurement.android.fragment.third.ThirdFragment;
 
 /**
  * Created by Belal on 2/3/2016.
