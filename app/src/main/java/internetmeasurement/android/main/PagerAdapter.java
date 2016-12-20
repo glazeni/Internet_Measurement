@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import internetmeasurement.android.fragment.first.FirstFragment;
+import internetmeasurement.android.fragment.fourth.FourthFragment;
 import internetmeasurement.android.fragment.second.SecondFragment;
 import internetmeasurement.android.fragment.third.ThirdFragment;
 
@@ -41,6 +42,9 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
             case 2:
                 ThirdFragment tab3 = new ThirdFragment();
                 return tab3;
+            case 3:
+                FourthFragment tab4 = new FourthFragment();
+                return tab4;
             default:
                 return null;
         }

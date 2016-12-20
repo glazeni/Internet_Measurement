@@ -19,17 +19,9 @@ public class SecondFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        /*Layout Customization
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 200);
-        params.addRule(RelativeLayout.ALIGN_TOP, RelativeLayout.TRUE);
-
-        //In the Graph
-        graph.setLayoutParams(params);
-        */
-
 
         View graphView = inflater.inflate(R.layout.fragment_second, container, false);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[]{
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),
                 new DataPoint(2, 3),
@@ -41,11 +33,12 @@ public class SecondFragment extends Fragment {
         GraphView graph = (GraphView) graphView.findViewById(R.id.graph);
         GraphViewStyle(graph);
 
-        new AdvancedLineGraph(series).initGraph(graph);
+        AdvancedLineGraph advancedLineGraph = new AdvancedLineGraph(graphView, series);
+        advancedLineGraph.initGraph();
         return graphView;
     }
-
-    private void GraphViewStyle(GraphView graph){
+/***TODO create action bar**/
+    private void GraphViewStyle(GraphView graph) {
         //Activate horizontal zooming and scrolling
         graph.getViewport().setScalable(true);
         //Activate horizontal scrolling

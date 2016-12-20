@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.example.menuexample.MenuExampleActivity" >
+
+    <group android:orderInCategory="@android:integer/config_shortAnimTime">
+
+        <item
+            android:id="@+id/menu_one"
+            android:orderInCategory="1"
+            android:title="ONE"/>
+
+        <item
+            android:id="@+id/menu_two"
+            android:orderInCategory="2"
+            android:title="TWO"/>
+
+        <item
+            android:id="@+id/menu_three"
+            android:orderInCategory="3"
+            android:title="THREE"/>
+
+        <item
+            android:id="@+id/menu_four"
+            android:orderInCategory="4"
+            android:title="FOUR"/>
+    </group>
+</menu>

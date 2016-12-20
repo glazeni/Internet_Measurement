@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -18,19 +17,21 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private int[] tabIcons = {
-            R.drawable.ic_looks_one_black_24dp,
-            R.drawable.ic_looks_two_black_24dp,
-            R.drawable.ic_looks_3_black_24dp
+            R.drawable.ic_network_check_white_36px,
+            R.drawable.ic_assessment_white_36px,
+            R.drawable.ic_settings_white_36px,
+            R.drawable.ic_info_outline_white_36px
     };
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d("onCreate", "MAIN-ENTERED");
+
         //Remove title bar
         this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         //Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //Constructor needs to be called after request window!
+        super.onCreate(savedInstanceState);
         //Set view
         setContentView(R.layout.activity_main);
 
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
         //Creating PagerAdapter
-        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), 3);
+        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), 4);
 
         //Adding adapter to pager
         viewPager.setAdapter(adapter);
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
             tabLayout.getTabAt(0).setIcon(tabIcons[0]);
             tabLayout.getTabAt(1).setIcon(tabIcons[1]);
             tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+            tabLayout.getTabAt(3).setIcon(tabIcons[3]);
     }
     @Override
     public void onBackPressed() {

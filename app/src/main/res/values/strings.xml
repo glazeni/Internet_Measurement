@@ -8,7 +8,7 @@
     <string name="third_item">Third item</string>
     <string name="fourth_item">Fourth item</string>
     <string name="spinner_title">Spinner</string>
-    <string name="measurement_type">Measurement Type</string>
+    <string name="measurement_type">Connection Type</string>
     <string name="date_picker_title">Wi-FI CONFIRMATION</string>
-    <string name="algorithm_type">Algorithm Type</string>
+    <string name="algorithm_type">Measurement type</string>
 </resources>

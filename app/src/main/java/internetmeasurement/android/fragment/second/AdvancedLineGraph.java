@@ -1,6 +1,7 @@
 package internetmeasurement.android.fragment.second;
 
 import android.graphics.Color;
+import android.view.View;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
@@ -8,41 +9,25 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
 
-import internetmeasurement.android.main.MainActivity;
 import internetmeasurement.android.R;
 
 /**
  * Created by jonas on 10.09.16.
  */
-public class AdvancedLineGraph extends BaseExample {
+public class AdvancedLineGraph {
     private Series mSeries;
+    private View mView;
 
-
-    public AdvancedLineGraph(Series series) {
+    public AdvancedLineGraph(View secondView, Series series) {
         this.mSeries = series;
+        this.mView = secondView;
+
     }
 
-    @Override
-    public void onCreate(MainActivity activity) {
-        GraphView graph = (GraphView) activity.findViewById(R.id.graph);
-        initGraph(graph);
-    }
-
-
-    @Override
-    public void initGraph(GraphView graph) {
+    public void initGraph() {
+        GraphView graph = (GraphView) mView.findViewById(R.id.graph);
 
         try {
-            // first series
-        /*LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6),
-                new DataPoint(5, 2)
-        });*/
-
             graph.addSeries(mSeries);
 
             // second series
@@ -65,7 +50,7 @@ public class AdvancedLineGraph extends BaseExample {
             graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
 
 
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }

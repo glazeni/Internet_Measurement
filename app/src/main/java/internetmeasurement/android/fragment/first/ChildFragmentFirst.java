@@ -64,7 +64,7 @@ public class ChildFragmentFirst extends Fragment {
         String[] values = new String[]{"None","Wi-Fi", "3G", "4G"};
         String[] algorithms = new String[]{"1", "2", "3", "4"};
         // Inflate the layout for this fragment
-        View ChildView = inflater.inflate(R.layout.fragment_child, container, false);
+        View ChildView = inflater.inflate(R.layout.fragment_child_first, container, false);
 
 
         /********************************         SPINNER 1 DEFINITION     ***************************************/
