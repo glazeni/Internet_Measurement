@@ -3,6 +3,7 @@ package internetmeasurement.android.main;
 /**
  * Created by glazen on 17/12/16.
  */
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;

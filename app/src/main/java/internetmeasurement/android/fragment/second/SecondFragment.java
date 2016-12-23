@@ -1,9 +1,7 @@
 package internetmeasurement.android.fragment.second;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +9,8 @@ import android.view.ViewGroup;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+
+import java.text.SimpleDateFormat;
 
 import internetmeasurement.android.R;
 
@@ -20,7 +20,7 @@ public class SecondFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View graphView = inflater.inflate(R.layout.fragment_second, container, false);
+        View secondView = inflater.inflate(R.layout.fragment_second, container, false);
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[]{
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),
@@ -29,16 +29,37 @@ public class SecondFragment extends Fragment {
                 new DataPoint(4, 6),
                 new DataPoint(5, 2)
         });
-        series.setTitle("first line");
-        GraphView graph = (GraphView) graphView.findViewById(R.id.graph);
+        GraphView graph = (GraphView) secondView.findViewById(R.id.graph);
         GraphViewStyle(graph);
 
-        AdvancedLineGraph advancedLineGraph = new AdvancedLineGraph(graphView, series);
+        AdvancedLineGraph advancedLineGraph = new AdvancedLineGraph(secondView, series);
         advancedLineGraph.initGraph();
-        return graphView;
+
+        //Get Date
+        //TextView textViewDate = (TextView) graphView.findViewById(R.id.text_date);
+        long date = System.currentTimeMillis();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, \n yyyy \n h:mm a");
+        String dateString = sdf.format(date);
+        //textViewDate.setText(dateString);
+
+        return secondView;
     }
-/***TODO create action bar**/
+
+    /*public View getView(GraphView graphViewFont) {
+
+        Paint currentPainter = new Paint();
+        Typeface typeFace = Typeface.createFromAsset(getContext().getAssets(), "fonts/Eurosti.ttf");
+        currentPainter.setTypeface(typeFace);
+        graphViewFont.setLayerType(View.LAYER_TYPE_HARDWARE,currentPainter);
+        return graphViewFont;
+    }*/
+
+    /***
+     * TODO create action bar
+     **/
     private void GraphViewStyle(GraphView graph) {
+
+
         //Activate horizontal zooming and scrolling
         graph.getViewport().setScalable(true);
         //Activate horizontal scrolling
@@ -47,14 +68,13 @@ public class SecondFragment extends Fragment {
         graph.getViewport().setScalableY(true);
         //Activate vertical scrolling
         graph.getViewport().setScrollableY(true);
-        //Set graph title
-        graph.setTitle("Bandwidth Estimation");
-        graph.setTitleColor(Color.WHITE);
-        graph.setTitleTextSize(70);
+        //Custom graph title
+        //graph.setTitleColor(Color.WHITE);
+        //graph.setTitleTextSize(70);
         //set Y Axis Title
-        graph.getGridLabelRenderer().setVerticalAxisTitle("Bandwidth");
+        //graph.getGridLabelRenderer().setVerticalAxisTitle("Bandwidth");
         //set X Axis Title
-        graph.getGridLabelRenderer().setHorizontalAxisTitle("Time/s");
+        //graph.getGridLabelRenderer().setHorizontalAxisTitle("Time/s");
         //set manual X bounds
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(0.5);
@@ -64,8 +84,6 @@ public class SecondFragment extends Fragment {
         graph.computeScroll();
         graph.getViewport().setMinY(3.5);
         graph.getViewport().setMaxY(8);
-        int margin = graph.getGraphContentTop();
-        Log.d("MARGIN TOP", String.valueOf(margin));
 
     }
 }

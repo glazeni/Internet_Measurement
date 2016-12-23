@@ -1,10 +1,8 @@
 package internetmeasurement.android.fragment.second;
 
-import android.graphics.Color;
 import android.view.View;
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
@@ -38,16 +36,16 @@ public class AdvancedLineGraph {
                     new DataPoint(3, 2),
                     new DataPoint(4, 5)
             });
-            series2.setTitle("speed");
-            series2.setDrawBackground(true);
-            series2.setColor(Color.argb(255, 255, 60, 60));
-            series2.setBackgroundColor(Color.argb(100, 204, 119, 119));
-            series2.setDrawDataPoints(true);
+            //series2.setTitle("speed");
+            //series2.setDrawBackground(true);
+            //series2.setColor(Color.argb(255, 255, 60, 60));
+            //series2.setBackgroundColor(Color.argb(100, 204, 119, 119));
+            //series2.setDrawDataPoints(true);
             graph.addSeries(series2);
 
-            // legend
-            graph.getLegendRenderer().setVisible(true);
-            graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+            // Caption
+            //graph.getLegendRenderer().setVisible(true);
+            //graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
 
 
         } catch (Exception ex) {

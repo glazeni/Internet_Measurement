@@ -1,9 +1,10 @@
-<FrameLayout android:id="@+id/fragment_second_container"
-             xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="wrap_content"
-             android:layout_height="match_parent"
-             tools:context=".fragment.second.SecondFragment">
+<RelativeLayout
+    android:id="@+id/fragment_second_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.second.SecondFragment">
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
@@ -11,4 +12,140 @@
         android:layout_height="200dp"
         android:layout_gravity="center|top"
         android:layout_marginTop="50dp"/>
-</FrameLayout>
+
+    <TextView
+        android:id="@+id/graph_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="Bandwidth Estimation"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/graph_X_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="250dp"
+        android:gravity="center"
+        android:text="Time/s"/>
+
+    <TextView
+        android:id="@+id/graph_Y_label"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="90dp"
+        android:rotation="-90"
+        android:text="Bandwidth"/>
+
+
+
+    <LinearLayout
+        android:id="@+id/results_container"
+        android:layout_width="295dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="280dp"
+        android:orientation="horizontal"
+        android:background="@drawable/text_view_rectangle"
+        >
+        <!-- Connection Type-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="3dp"
+            android:text="Connection"
+            android:textColor="@color/Black"
+            />
+
+        <ImageView
+            android:layout_marginTop="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_worlwide_transmission"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="#4fa5d5" />
+
+        <!-- Measurement Type-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="3dp"
+            android:text="Type"
+            android:textColor="@color/Black"
+            />
+
+        <ImageView
+            android:layout_marginTop="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_swap_vertical_circle_white_18px"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="#4fa5d5" />
+
+        <!-- Date -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="3dp"
+            android:text="Date"
+            android:textColor="@color/Black"
+            />
+        <ImageView
+            android:layout_marginTop="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_date_range_white_18px"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="#4fa5d5" />
+
+        <!-- Result -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="3dp"
+            android:text="Result"
+            android:textColor="@color/Black"
+            />
+        <ImageView
+            android:layout_marginTop="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_speed_test"/>
+        <View
+            android:layout_marginLeft="2dp"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="#4fa5d5" />
+
+        <!-- Ping -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="3dp"
+            android:text="Ping"
+            android:textColor="@color/Black"
+            />
+        <ImageView
+            android:layout_marginTop="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_swap_horiz_white_18px"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

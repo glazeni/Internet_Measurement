@@ -1,27 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context="com.example.menuexample.MenuExampleActivity" >
+      tools:context="com.example.menuexample.MenuExampleActivity">
 
     <group android:orderInCategory="@android:integer/config_shortAnimTime">
-
         <item
-            android:id="@+id/menu_one"
+            android:id="@+id/menu_network_info"
             android:orderInCategory="1"
-            android:title="ONE"/>
+            android:title="Network Info"/>
 
         <item
-            android:id="@+id/menu_two"
+            android:id="@+id/menu_variable_settings"
             android:orderInCategory="2"
-            android:title="TWO"/>
-
-        <item
-            android:id="@+id/menu_three"
-            android:orderInCategory="3"
-            android:title="THREE"/>
-
-        <item
-            android:id="@+id/menu_four"
-            android:orderInCategory="4"
-            android:title="FOUR"/>
+            android:title="Change Settings"/>
     </group>
 </menu>

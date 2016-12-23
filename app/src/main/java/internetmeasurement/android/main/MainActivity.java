@@ -2,6 +2,7 @@ package internetmeasurement.android.main;
 
 
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -9,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import internetmeasurement.android.R;
 
@@ -16,12 +18,6 @@ import internetmeasurement.android.R;
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private int[] tabIcons = {
-            R.drawable.ic_network_check_white_36px,
-            R.drawable.ic_assessment_white_36px,
-            R.drawable.ic_settings_white_36px,
-            R.drawable.ic_info_outline_white_36px
-    };
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -32,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //Constructor needs to be called after request window!
         super.onCreate(savedInstanceState);
+
         //Set view
         setContentView(R.layout.activity_main);
 
@@ -53,8 +50,9 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         //Adding onTabSelectedListener to swipe views
         tabLayout.setOnTabSelectedListener(this);
 
-        //Adding icons to the Tabs and setup tabLayout with viewPager
-        setupTabIcons();
+
+        //Customization tabs within tabLayout
+        setupTabViews();
 
     }
 
@@ -76,14 +74,36 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     }
 
 
-    private void setupTabIcons() {
-            tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-            tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-            tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-            tabLayout.getTabAt(3).setIcon(tabIcons[3]);
+    private void setupTabViews() {
+        //Create typeface to apply to all textviews
+        Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/Eurosti.ttf");
+
+        //Tab1 Custom View Text & Icon & Font
+        TextView tabText1  = (TextView) findViewById(R.id.tab1_text);
+        tabText1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_network_check_white_24px, 0, 0);
+        tabText1.setTypeface(typeFace);
+        //Tab2 Custom View Text & Icon & Font
+        TextView tabText2 = (TextView) findViewById(R.id.tab2_text);
+        tabText2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_assessment_white_24px, 0, 0);
+        tabText2.setTypeface(typeFace);
+        //Tab3 Custom View Text & Icon & Font
+        TextView tabText3  = (TextView) findViewById(R.id.tab3_text);
+        tabText3.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_settings_white_24px, 0, 0);
+        tabText3.setTypeface(typeFace);
+        //Tab4 Custom View Text & Icon & Font
+        TextView tabText4 = (TextView) findViewById(R.id.tab4_text);
+        tabText4.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_info_outline_white_24px, 0, 0);
+        tabText4.setTypeface(typeFace);
+
+        //Apply Custom Views to tabs
+            tabLayout.getTabAt(0).setCustomView(tabText1);
+            tabLayout.getTabAt(1).setCustomView(tabText2);
+            tabLayout.getTabAt(2).setCustomView(tabText3);
+            tabLayout.getTabAt(3).setCustomView(tabText4);
     }
     @Override
     public void onBackPressed() {
+
         //Quit Alert
         new AlertDialog.Builder(this)
                 .setTitle("Really Exit?")
