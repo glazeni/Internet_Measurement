@@ -22,7 +22,7 @@ import internetmeasurement.android.main.MainActivity;
 public class ThirdFragment extends Fragment {
 
     private static FragmentManager childFM;
-
+    private int i = 0;
     ChildFragmentThirdNetwork mChildFragmentThirdNetwork = null;
     ChildFragmentThirdSettings mChildFragmentThirdSettings = null;
 
