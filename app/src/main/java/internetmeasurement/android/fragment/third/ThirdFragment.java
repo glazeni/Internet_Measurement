@@ -3,6 +3,7 @@ package internetmeasurement.android.fragment.third;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,8 +20,9 @@ import internetmeasurement.android.main.MainActivity;
  * A simple {@link Fragment} subclass.
  */
 public class ThirdFragment extends Fragment {
-    MenuItem mMenuItem;
-    Menu mMenu;
+
+    private static FragmentManager childFM;
+
     ChildFragmentThirdNetwork mChildFragmentThirdNetwork = null;
     ChildFragmentThirdSettings mChildFragmentThirdSettings = null;
 
@@ -56,13 +58,13 @@ public class ThirdFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        childFM= getChildFragmentManager();
         if ((mChildFragmentThirdNetwork == null || mChildFragmentThirdSettings == null) && savedInstanceState == null) {
             mChildFragmentThirdNetwork = new ChildFragmentThirdNetwork();
             mChildFragmentThirdSettings = new ChildFragmentThirdSettings();
         } else {
             mChildFragmentThirdNetwork = (ChildFragmentThirdNetwork) getChildFragmentManager().findFragmentById(R.id.fragment_childthird_network);
             mChildFragmentThirdSettings = (ChildFragmentThirdSettings) getChildFragmentManager().findFragmentById(R.id.fragment_childthird_settings);
-            getChildFragmentManager().executePendingTransactions();
         }
     }
 
@@ -86,15 +88,16 @@ public class ThirdFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_network_info:
+
                 //Toast.makeText(getContext(), "Selected : " + item.toString(), Toast.LENGTH_SHORT).show();
-                getChildFragmentManager().beginTransaction().replace(R.id.fragment_third_container, mChildFragmentThirdNetwork).commit();
-                getChildFragmentManager().executePendingTransactions();
+                childFM.beginTransaction().replace(R.id.fragment_third_container, mChildFragmentThirdNetwork).commit();
+                //childFM.executePendingTransactions();
                 break;
 
             case R.id.menu_variable_settings:
                 //Toast.makeText(getContext(), "Selected : " + item.toString(), Toast.LENGTH_SHORT).show();
-                getChildFragmentManager().beginTransaction().replace(R.id.fragment_third_container, mChildFragmentThirdSettings).commit();
-                getChildFragmentManager().executePendingTransactions();
+                childFM.beginTransaction().replace(R.id.fragment_third_container, mChildFragmentThirdSettings).commit();
+                //childFM.executePendingTransactions();
                 break;
 
         }
