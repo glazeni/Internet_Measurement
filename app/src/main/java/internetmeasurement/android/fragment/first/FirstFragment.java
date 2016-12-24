@@ -40,7 +40,7 @@ public class FirstFragment extends Fragment {
     private int mIndex2 = 0;
     private Button startButton;
     private ProgressBar progressBar;
-    int progressStatus = 0;
+    private int  progressStatus = 0;
 
 
     @Override
@@ -83,7 +83,6 @@ public class FirstFragment extends Fragment {
 
         //Progress Bar
         progressBar = (ProgressBar) firstView.findViewById(R.id.progress_bar);
-        updateProgressBar();
 
         //Begin Button
         startButton = (Button) firstView.findViewById(R.id.button_start);
@@ -91,13 +90,23 @@ public class FirstFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int pos = mSpinner2.getSelectedItemPosition();
-                Log.d("SpinnerPosition", String.valueOf(pos));
+                if(pos==0){
+                    if(progressBar.getRotation()==180){
+                        progressBar.setRotation(0);
+                    }
+                    updateProgressBar(0);
+                }else if(pos==1){
+                    progressBar.setRotation(180);
+                    updateProgressBar(0);
+                }
+
+                pingCommand("ping -c 1 -w 1 google.com", false);
             }
         });
 
         //Spinner String List
         String[] values = new String[]{"None", "Wi-Fi", "3G", "4G"};
-        String[] algorithms = new String[]{"Uplink", "Downlink", "Ping"};
+        String[] algorithms = new String[]{"Uplink", "Downlink"};
 
 
         /********************************         SPINNER 1 DEFINITION     ***************************************/
@@ -111,7 +120,7 @@ public class FirstFragment extends Fragment {
                 //Typeface typeFace_item = Typeface.createFromAsset(getContext().getAssets(), "fonts/Eurosti.ttf");
                 //tv.setTypeface(typeFace_item);
 
-                if (position == 0) {
+                if (position == mSpinner1.getSelectedItemPosition()) {
                     // Set the hint text color gray
                     tv.setTextColor(Color.GRAY);
                 } else {
@@ -189,8 +198,11 @@ public class FirstFragment extends Fragment {
         if (savedInstanceState != null) {
             mIndex1 = savedInstanceState.getInt("SpinnerPosition1");
             mIndex2 = savedInstanceState.getInt("SpinnerPosition2");
+            progressStatus = savedInstanceState.getInt("ProgressBarStatus");
+            updateProgressBar(progressStatus);
             mSpinner1.setSelection(mIndex1);
             mSpinner2.setSelection(mIndex2);
+
 
         }
     }
@@ -201,7 +213,9 @@ public class FirstFragment extends Fragment {
         //Save the fragment's state here
         outState.putInt("SpinnerPosition1", mSpinner1.getSelectedItemPosition());
         outState.putInt("SpinnerPosition2", mSpinner2.getSelectedItemPosition());
+        outState.putInt("ProgressBarStatus",progressStatus);
     }
+
 
     public static String pingCommand(String cmd, boolean sudo) {
         try {
@@ -228,25 +242,31 @@ public class FirstFragment extends Fragment {
 
     }
 
-    private void updateProgressBar() {
+    private void updateProgressBar(int pbStatus) {
         new Thread() {
             @Override
             public void run() {
                 //super.run();
                 try {
-                    progressStatus = 0;
-                    while (progressStatus < 100) {
-                        sleep(1000);
+                    progressStatus=pbStatus;
+                    while (progressStatus <= 100) {
+
+                        sleep(500);
                         progressBar.setProgress(progressStatus);
                         progressStatus += 5;
                     }
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }finally {
+                    if(progressStatus>=100){
+                        progressBar.setProgress(0);
+                    }
                 }
             }
         }.start();
     }
+
 
     public class RunTCPClient extends AsyncTask<Void, Void, String> {
         @Override
@@ -267,33 +287,6 @@ public class FirstFragment extends Fragment {
         }
     }
 
-    //Update progress bar with Assync Task
-    /*public void startProgress(View view) {
-        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-        progressStatus = 0;
-        progressBar.setProgress(progressStatus);
 
-        //progressBar.setVisibility(View.VISIBLE);
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(final Void... params) {
-                while (progressStatus < 100) {
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    progressStatus += 10;
-                    handler.post(new Runnable() {
-                        public void run() {
-                            progressBar.setProgress(progressStatus);
-                        }
-                    });
-                }
-                return null;
-            }
-
-        }.execute();
-    }*/
 }
 

@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
 
+        //Disable Orientation
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         //Remove title bar
         this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         //Remove notification bar

@@ -22,7 +22,6 @@ import internetmeasurement.android.main.MainActivity;
 public class ThirdFragment extends Fragment {
 
     private static FragmentManager childFM;
-    private int i = 0;
     ChildFragmentThirdNetwork mChildFragmentThirdNetwork = null;
     ChildFragmentThirdSettings mChildFragmentThirdSettings = null;
 
@@ -58,7 +57,7 @@ public class ThirdFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        childFM= getChildFragmentManager();
+        childFM = getChildFragmentManager();
         if ((mChildFragmentThirdNetwork == null || mChildFragmentThirdSettings == null) && savedInstanceState == null) {
             mChildFragmentThirdNetwork = new ChildFragmentThirdNetwork();
             mChildFragmentThirdSettings = new ChildFragmentThirdSettings();
@@ -88,18 +87,17 @@ public class ThirdFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_network_info:
-
                 //Toast.makeText(getContext(), "Selected : " + item.toString(), Toast.LENGTH_SHORT).show();
                 childFM.beginTransaction().replace(R.id.fragment_third_container, mChildFragmentThirdNetwork).commit();
-                //childFM.executePendingTransactions();
                 break;
-
             case R.id.menu_variable_settings:
                 //Toast.makeText(getContext(), "Selected : " + item.toString(), Toast.LENGTH_SHORT).show();
                 childFM.beginTransaction().replace(R.id.fragment_third_container, mChildFragmentThirdSettings).commit();
-                //childFM.executePendingTransactions();
                 break;
 
+            default:
+                childFM.executePendingTransactions();
+                return false;
         }
         return true;
     }
