@@ -19,4 +19,5 @@ public class ChildFragmentThirdSettings extends Fragment {
         View childThird = inflater.inflate(R.layout.fragment_child_third_settings,container,false);
         return childThird;
     }
+
 }

@@ -2,9 +2,9 @@ package internetmeasurement.android.main;
 
 
 import android.content.DialogInterface;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -77,31 +77,31 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
 
     private void setupTabViews() {
-        //Create typeface to apply to all textviews
-        Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/Eurosti.ttf");
-
+        //Create typeface to individual Textviews
+        //Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/Eurosti.ttf");
         //Tab1 Custom View Text & Icon & Font
         TextView tabText1  = (TextView) findViewById(R.id.tab1_text);
         tabText1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_network_check_white_24px, 0, 0);
-        tabText1.setTypeface(typeFace);
+        //tabText1.setTypeface(typeFace);
         //Tab2 Custom View Text & Icon & Font
         TextView tabText2 = (TextView) findViewById(R.id.tab2_text);
         tabText2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_assessment_white_24px, 0, 0);
-        tabText2.setTypeface(typeFace);
+        //tabText2.setTypeface(typeFace);
         //Tab3 Custom View Text & Icon & Font
         TextView tabText3  = (TextView) findViewById(R.id.tab3_text);
         tabText3.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_settings_white_24px, 0, 0);
-        tabText3.setTypeface(typeFace);
+        //tabText3.setTypeface(typeFace);
         //Tab4 Custom View Text & Icon & Font
         TextView tabText4 = (TextView) findViewById(R.id.tab4_text);
         tabText4.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_info_outline_white_24px, 0, 0);
-        tabText4.setTypeface(typeFace);
+        //tabText4.setTypeface(typeFace);
 
         //Apply Custom Views to tabs
             tabLayout.getTabAt(0).setCustomView(tabText1);
             tabLayout.getTabAt(1).setCustomView(tabText2);
             tabLayout.getTabAt(2).setCustomView(tabText3);
             tabLayout.getTabAt(3).setCustomView(tabText4);
+
     }
     @Override
     public void onBackPressed() {
@@ -128,6 +128,9 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
     }
 
+    public void checkPermission(FragmentActivity activity, String accessCoarseLocation, Integer uid) {
+
+    }
 }
 
 

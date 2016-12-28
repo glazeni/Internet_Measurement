@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -37,11 +36,11 @@ public class SecondFragment extends Fragment {
         advancedLineGraph.initGraph();
 
         //Get Date
-        TextView textViewDate = (TextView) secondView.findViewById(R.id.date_info);
+        //TextView textViewDate = (TextView) secondView.findViewById(R.id.date_info);
         long date = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, \n yyyy \n h:mm a");
         String dateString = sdf.format(date);
-        textViewDate.setText(dateString);
+        //textViewDate.setText(dateString);
 
         return secondView;
     }
