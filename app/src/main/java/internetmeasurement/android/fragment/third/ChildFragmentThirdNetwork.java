@@ -7,6 +7,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,15 +37,28 @@ public class ChildFragmentThirdNetwork extends Fragment {
 
         //Wi-Fi Manager
         wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+        Log.d("WIFI-MANAGER", wifiManager.getConnectionInfo().toString());
 
         //Connectivity Manager
         connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         //Connection type
         NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
+        Log.d("CONNECTIVITY-MANAGER", netInfo.toString());
+
         if (netInfo.getType() == connectivityManager.TYPE_WIFI && netInfo.isConnected()) {
             TextView tvConnectionType = (TextView) childThirdNetwork.findViewById(R.id.connection_type);
             tvConnectionType.setText("Wi-Fi");
+
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+
+            Log.d("Detailed-State", networkInfo.getDetailedState().toString());
+            Log.d("Active Network", netInfo.toString());
+            //Log.d("Detailed-State", String.valueOf(networkInfo.getType()));
+            //Log.d("Detailed-State", String.valueOf(networkInfo.getType()));
+
+
 
 
         } else {
@@ -68,6 +82,7 @@ public class ChildFragmentThirdNetwork extends Fragment {
             tvMacAddress.setText("MAC Address: " + NetworkInterfacesUtils.getMACAddress("eth0"));
         }
 
+
         //Server IP address
         TextView tvServerIp = (TextView) childThirdNetwork.findViewById(R.id.server_ip_address);
         tvServerIp.setText("Server Ip Address: ");
@@ -87,10 +102,6 @@ public class ChildFragmentThirdNetwork extends Fragment {
 
         return childThirdNetwork;
     }
-
-
-
-
 
 
 }

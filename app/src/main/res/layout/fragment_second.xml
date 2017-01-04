@@ -89,7 +89,6 @@
                     android:src="@drawable/ic_swap_vertical_circle_white_18px"/>
 
                 <!-- Date -->
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -116,6 +115,7 @@
                     />
 
                 <ImageView
+                    android:layout_marginLeft="2dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"

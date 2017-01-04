@@ -22,6 +22,7 @@ import internetmeasurement.android.main.MainActivity;
  */
 public class ThirdFragment extends Fragment {
     FragmentManager childFM = null;
+    View mthirdView=null;
     ChildFragmentThirdNetwork mChildFragmentThirdNetwork = null;
     ChildFragmentThirdSettings mChildFragmentThirdSettings = null;
 
@@ -31,7 +32,7 @@ public class ThirdFragment extends Fragment {
                              Bundle savedInstanceState) {
         //    Inflate the layout for this fragment
         View thirdView = inflater.inflate(R.layout.fragment_third, container, false);
-
+        mthirdView=thirdView;
         //Initialize NestedFragmentManager
         childFM = getChildFragmentManager();
         //Show Options Menu

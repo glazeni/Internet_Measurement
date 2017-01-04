@@ -6,13 +6,107 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="20dp"
     tools:context=".fragment.third.ThirdFragment">
 
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="100dp"
-    android:gravity="center"
-    android:text="SETTINGS"
-    android:textSize="30sp"/>
+    <TextView
+        android:id="@+id/tcp_properties"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="TCP Properties"
+        android:textSize="30sp"/>
+
+    <!--MTU UPLINK-->
+    <TextView
+        android:id="@+id/mtu_size_uplink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tcp_properties"
+        android:layout_marginTop="25dp"
+        android:text="MTU Size Uplink: 1500 bytes "
+        android:textSize="20sp"/>
+
+
+    <SeekBar
+        android:id="@+id/mtu_uplink_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mtu_size_uplink"
+        android:max="3000"
+        android:thumbOffset="0dp"/>
+
+    <!--MTU DOWNLINK-->
+    <TextView
+        android:id="@+id/mtu_size_downlink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mtu_uplink_bar"
+        android:layout_marginTop="10dp"
+        android:text="MTU Size Downlink: 2600 bytes "
+        android:textSize="20sp"/>
+
+    <SeekBar
+        android:id="@+id/mtu_downlink_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mtu_size_downlink"
+        android:max="3000"
+        android:thumbOffset="0dp"/>
+
+    <!--SOCKET RCV BUFFER-->
+    <TextView
+        android:id="@+id/socket_rcv_buffer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mtu_downlink_bar"
+        android:layout_marginTop="10dp"
+        android:text="Socket Receive Buffer: 64000 bytes"
+        android:textSize="20sp"/>
+
+
+    <SeekBar
+        android:id="@+id/socket_rcv_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/socket_rcv_buffer"
+        android:max="64000"
+        android:thumbOffset="0dp"/>
+
+    <!--SOCKET SND BUFFER-->
+    <TextView
+        android:id="@+id/socket_snd_buffer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/socket_rcv_bar"
+        android:layout_marginTop="10dp"
+        android:text="Socket Send Buffer: 64000 bytes"
+        android:textSize="20sp"/>
+
+    <SeekBar
+        android:id="@+id/socket_snd_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/socket_snd_buffer"
+        android:max="64000"
+        android:thumbOffset="0dp"/>
+
+    <!--SOCKET Timeout-->
+    <TextView
+        android:id="@+id/socket_timeout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/socket_snd_bar"
+        android:layout_marginTop="10dp"
+        android:text="Socket Timeout: 5000 ms"
+        android:textSize="20sp"/>
+
+    <SeekBar
+        android:id="@+id/socket_timeout_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/socket_timeout"
+        android:max="10000"
+        android:thumbOffset="0dp"/>
+
 </RelativeLayout>

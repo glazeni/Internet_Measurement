@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Timer;
 
 import Client.TCPClient;
 import internetmeasurement.android.R;
@@ -40,8 +41,8 @@ public class FirstFragment extends Fragment {
     private int mIndex2 = 0;
     private Button startButton;
     private ProgressBar progressBar;
-    private int  progressStatus = 0;
-
+    private int progressStatus = 0;
+    private Timer timer = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class FirstFragment extends Fragment {
                              final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         // Inflate the layout for this fragment
-        View firstView  = inflater.inflate(R.layout.fragment_first, container, false);
+        View firstView = inflater.inflate(R.layout.fragment_first, container, false);
         //Wi-Fi manager
         final WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
         //Network manager
@@ -73,7 +74,6 @@ public class FirstFragment extends Fragment {
         //Network Info
         NetworkInfo networkInfo = connectManager.getActiveNetworkInfo();
         //final String networkType = networkInfo.getTypeName();
-
 
 
         //Custom Font to SpinnerTitle
@@ -90,12 +90,12 @@ public class FirstFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int pos = mSpinner2.getSelectedItemPosition();
-                if(pos==0){
-                    if(progressBar.getRotation()==180){
+                if (pos == 0) {
+                    if (progressBar.getRotation() == 180) {
                         progressBar.setRotation(0);
                     }
                     updateProgressBar(0);
-                }else if(pos==1){
+                } else if (pos == 1) {
                     progressBar.setRotation(180);
                     updateProgressBar(0);
                 }
@@ -199,7 +199,7 @@ public class FirstFragment extends Fragment {
             mIndex1 = savedInstanceState.getInt("SpinnerPosition1");
             mIndex2 = savedInstanceState.getInt("SpinnerPosition2");
             progressStatus = savedInstanceState.getInt("ProgressBarStatus");
-            updateProgressBar(progressStatus);
+            //updateProgressBar(progressStatus);
             mSpinner1.setSelection(mIndex1);
             mSpinner2.setSelection(mIndex2);
 
@@ -213,7 +213,7 @@ public class FirstFragment extends Fragment {
         //Save the fragment's state here
         outState.putInt("SpinnerPosition1", mSpinner1.getSelectedItemPosition());
         outState.putInt("SpinnerPosition2", mSpinner2.getSelectedItemPosition());
-        outState.putInt("ProgressBarStatus",progressStatus);
+        outState.putInt("ProgressBarStatus", progressStatus);
     }
 
 
@@ -248,25 +248,24 @@ public class FirstFragment extends Fragment {
             public void run() {
                 //super.run();
                 try {
-                    progressStatus=pbStatus;
+                    progressStatus = pbStatus;
                     while (progressStatus <= 100) {
 
                         sleep(500);
                         progressBar.setProgress(progressStatus);
-                        progressStatus += 5;
+                        progressStatus += 1;
                     }
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }finally {
-                    if(progressStatus>=100){
+                } finally {
+                    if (progressStatus >= 100) {
                         progressBar.setProgress(0);
                     }
                 }
             }
         }.start();
     }
-
 
     public class RunTCPClient extends AsyncTask<Void, Void, String> {
         @Override
@@ -286,7 +285,8 @@ public class FirstFragment extends Fragment {
             super.onPreExecute();
         }
     }
-
-
 }
+
+
+
 

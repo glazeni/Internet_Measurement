@@ -20,7 +20,10 @@ public class SecondFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        //Inflate View
         View secondView = inflater.inflate(R.layout.fragment_second, container, false);
+
+        //Data Points Series 1
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[]{
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),
@@ -29,9 +32,13 @@ public class SecondFragment extends Fragment {
                 new DataPoint(4, 6),
                 new DataPoint(5, 2)
         });
+        series.setTitle("Fire");
+
+        //GraphStyle
         GraphView graph = (GraphView) secondView.findViewById(R.id.graph);
         GraphViewStyle(graph);
 
+        //Initializing Plot
         AdvancedLineGraph advancedLineGraph = new AdvancedLineGraph(secondView, series);
         advancedLineGraph.initGraph();
 

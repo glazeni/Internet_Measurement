@@ -4,7 +4,6 @@ package internetmeasurement.android.main;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +16,7 @@ import internetmeasurement.android.R;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
     private TabLayout tabLayout;
-    private ViewPager viewPager;
+    public ViewPager viewPager;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -125,10 +124,6 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-    }
-
-    public void checkPermission(FragmentActivity activity, String accessCoarseLocation, Integer uid) {
 
     }
 }

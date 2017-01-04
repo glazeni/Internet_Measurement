@@ -286,17 +286,14 @@ public class NetworkInterfacesUtils {
     }
 
     public static String getPublicIP() {
-        String response = null;
+        String publicIP = null;
         try {
-            String publicIP = new getPublicIPAddress().execute().get();
-            response = publicIP;
+            publicIP = new getPublicIPAddress().execute().get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return response;
+        return publicIP;
     }
-
-
 }
