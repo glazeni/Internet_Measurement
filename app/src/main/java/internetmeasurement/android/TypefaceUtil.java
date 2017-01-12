@@ -32,6 +32,8 @@ public class TypefaceUtil {
         }
     }
 
+
+
     //Increase Clickable Area
     /*public static void increaseClickArea(View parent, View child) {
 

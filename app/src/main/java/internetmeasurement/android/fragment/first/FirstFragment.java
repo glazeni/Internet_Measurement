@@ -24,7 +24,6 @@ import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Timer;
 
 import Client.TCPClient;
 import internetmeasurement.android.R;
@@ -42,7 +41,6 @@ public class FirstFragment extends Fragment {
     private Button startButton;
     private ProgressBar progressBar;
     private int progressStatus = 0;
-    private Timer timer = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -199,7 +197,7 @@ public class FirstFragment extends Fragment {
             mIndex1 = savedInstanceState.getInt("SpinnerPosition1");
             mIndex2 = savedInstanceState.getInt("SpinnerPosition2");
             progressStatus = savedInstanceState.getInt("ProgressBarStatus");
-            //updateProgressBar(progressStatus);
+            updateProgressBar(progressStatus);
             mSpinner1.setSelection(mIndex1);
             mSpinner2.setSelection(mIndex2);
 

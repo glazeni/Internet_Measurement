@@ -21,18 +21,17 @@ import internetmeasurement.android.main.MainActivity;
  * A simple {@link Fragment} subclass.
  */
 public class ThirdFragment extends Fragment {
-    FragmentManager childFM = null;
-    View mthirdView=null;
+    private FragmentManager childFM = null;
+    View mthirdView = null;
     ChildFragmentThirdNetwork mChildFragmentThirdNetwork = null;
     ChildFragmentThirdSettings mChildFragmentThirdSettings = null;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //    Inflate the layout for this fragment
         View thirdView = inflater.inflate(R.layout.fragment_third, container, false);
-        mthirdView=thirdView;
+        mthirdView = thirdView;
         //Initialize NestedFragmentManager
         childFM = getChildFragmentManager();
         //Show Options Menu
@@ -56,9 +55,11 @@ public class ThirdFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState != null && mChildFragmentThirdNetwork != null) {
-            mChildFragmentThirdNetwork = (ChildFragmentThirdNetwork) getChildFragmentManager().findFragmentById(R.id.fragment_childthird_network);
+            mChildFragmentThirdNetwork = (ChildFragmentThirdNetwork) childFM.findFragmentById(R.id.fragment_childthird_network);
         } else if (savedInstanceState != null && mChildFragmentThirdSettings != null) {
-            mChildFragmentThirdSettings = (ChildFragmentThirdSettings) getChildFragmentManager().findFragmentById(R.id.fragment_childthird_settings);
+            mChildFragmentThirdSettings = (ChildFragmentThirdSettings) childFM.findFragmentById(R.id.fragment_childthird_settings);
+        } else {
+            childFM.executePendingTransactions();
         }
     }
 
@@ -85,30 +86,27 @@ public class ThirdFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        FragmentTransaction fragmentTransactionNetwork = childFM.beginTransaction();
-        FragmentTransaction fragmentTransactionSettings = childFM.beginTransaction();
         switch (item.getItemId()) {
             case R.id.menu_network_info:
+                FragmentTransaction fragmentTransactionNetwork = childFM.beginTransaction();
                 //Toast.makeText(getContext(), "Selected : " +
                 if (mChildFragmentThirdNetwork == null) {
                     mChildFragmentThirdNetwork = new ChildFragmentThirdNetwork();
-                    childFM.beginTransaction();
+                    //childFM.beginTransaction();
                     fragmentTransactionNetwork.replace(R.id.fragment_third_container, mChildFragmentThirdNetwork).commit();
                 } else {
-                    //mChildFragmentThirdNetwork = (ChildFragmentThirdNetwork) childFM.findFragmentById(R.id.fragment_childthird_network);
                     fragmentTransactionNetwork.replace(R.id.fragment_third_container, mChildFragmentThirdNetwork).commit();
                 }
                 childFM.executePendingTransactions();
                 return true;
             case R.id.menu_variable_settings:
+                FragmentTransaction fragmentTransactionSettings = childFM.beginTransaction();
                 //Toast.makeText(getContext(), "Selected : " + item.toString(), Toast.LENGTH_SHORT).show();
                 if (mChildFragmentThirdSettings == null) {
                     mChildFragmentThirdSettings = new ChildFragmentThirdSettings();
-                    childFM.beginTransaction();
+                    //childFM.beginTransaction();
                     fragmentTransactionSettings.replace(R.id.fragment_third_container, mChildFragmentThirdSettings).commit();
                 } else {
-                    //mChildFragmentThirdSettings = (ChildFragmentThirdSettings) childFM.findFragmentById(R.id.fragment_childthird_settings);
-                    //mChildFragmentThirdSettings.getView();
                     fragmentTransactionSettings.replace(R.id.fragment_third_container, mChildFragmentThirdSettings).commit();
                 }
                 childFM.executePendingTransactions();
@@ -116,7 +114,6 @@ public class ThirdFragment extends Fragment {
             default:
                 return false;
         }
-
     }
 
 

@@ -22,12 +22,11 @@ public class ChildFragmentThirdNetwork extends Fragment {
     ConnectivityManager connectivityManager = null;
     TelephonyManager telephonyManager = null;
     WifiManager wifiManager = null;
-    //NetworkInfo mWifi = null;
-    //mWifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
 
         //Inflate View
         View childThirdNetwork = inflater.inflate(R.layout.fragment_child_third_network, container, false);
@@ -43,67 +42,113 @@ public class ChildFragmentThirdNetwork extends Fragment {
         connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         //Connection type
-        NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
-        Log.d("CONNECTIVITY-MANAGER", netInfo.toString());
+        NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
+        Log.d("CONNECTIVITY-MANAGER", activeNetInfo.toString());
 
-        if (netInfo.getType() == connectivityManager.TYPE_WIFI && netInfo.isConnected()) {
+        if (!activeNetInfo.isAvailable() && !activeNetInfo.isConnected()) {
             TextView tvConnectionType = (TextView) childThirdNetwork.findViewById(R.id.connection_type);
-            tvConnectionType.setText("Wi-Fi");
-
-            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-
-            Log.d("Detailed-State", networkInfo.getDetailedState().toString());
-            Log.d("Active Network", netInfo.toString());
-            //Log.d("Detailed-State", String.valueOf(networkInfo.getType()));
-            //Log.d("Detailed-State", String.valueOf(networkInfo.getType()));
-
-
-
-
+            tvConnectionType.setText("No active connection!");
         } else {
-            TextView tvConnectionType = (TextView) childThirdNetwork.findViewById(R.id.connection_type);
-            tvConnectionType.setText("3G/4G");
+
+            //WI-FI TYPE!!
+            if (activeNetInfo.getType() == connectivityManager.TYPE_WIFI) {
+                TextView tvConnectionType = (TextView) childThirdNetwork.findViewById(R.id.connection_type);
+                tvConnectionType.setText("Wi-Fi");
+
+                //Mobile Mac Address
+                TextView tvMacAddress = (TextView) childThirdNetwork.findViewById(R.id.mobile_mac_address);
+                tvMacAddress.setText("MAC Address: " + NetworkInterfacesUtils.getMACAddress("wlan0"));
+
+                //SSID - WI-FI name
+                TextView tvEXTRAinfo = (TextView) childThirdNetwork.findViewById(R.id.extra_info);
+                tvEXTRAinfo.setText("SSID: " + activeNetInfo.getExtraInfo().toString());
+
+
+                //CELLULAR TYPE!!
+            } else {
+                TextView tvConnectionType = (TextView) childThirdNetwork.findViewById(R.id.connection_type);
+                tvConnectionType.setText(getNetworkClass());
+
+
+
+                //Mobile Mac Address / IMEI
+                TextView tvMacAddress = (TextView) childThirdNetwork.findViewById(R.id.mobile_mac_address);
+                tvMacAddress.setText("IMEI: " + telephonyManager.getDeviceId().toString());
+
+
+                //Cellular System
+                TextView tvEXTRAinfo = (TextView) childThirdNetwork.findViewById(R.id.extra_info);
+                tvEXTRAinfo.setText("Cellular System: " + activeNetInfo.getExtraInfo().toString());
+
+                //Network Operator
+                TextView tvNetworkOperator = (TextView) childThirdNetwork.findViewById(R.id.network_operator);
+                tvNetworkOperator.setText("Operator: "+ telephonyManager.getNetworkOperatorName());
+
+                //Cell Location
+                TextView tvCellLocation = (TextView) childThirdNetwork.findViewById(R.id.cell_location);
+                tvCellLocation.setText("Cell Location: "+telephonyManager.getCellLocation().toString());
+
+
+            }
+
+
+            //Private IP address
+            TextView tvPrivateMobileIp = (TextView) childThirdNetwork.findViewById(R.id.mobile_private_ip_address);
+            tvPrivateMobileIp.setText("Private Ip Address:  " + NetworkInterfacesUtils.getPrivateIPAddress(true));
+
+            //Public IP address
+            TextView tvPublicMobileIp = (TextView) childThirdNetwork.findViewById(R.id.mobile_public_ip_address);
+            tvPublicMobileIp.setText("Public Ip Address: " + NetworkInterfacesUtils.getPublicIP());
+
+            //Server IP address
+            TextView tvServerIp = (TextView) childThirdNetwork.findViewById(R.id.server_ip_address);
+            tvServerIp.setText("Server Ip Address: 193.136.127.218");
+
+            //Default Gateway
+            TextView tvDefaultGateway = (TextView) childThirdNetwork.findViewById(R.id.default_gateway_address);
+            tvDefaultGateway.setText("Default Gateway: " + NetworkInterfacesUtils.getDefaultGateway());
+
+            //NetworkMask
+            TextView tvnetMask = (TextView) childThirdNetwork.findViewById(R.id.network_mask);
+            tvnetMask.setText("Network Mask: " + NetworkInterfacesUtils.getNetmask());
+
+            //MTU Size
+            TextView tvMTU = (TextView) childThirdNetwork.findViewById(R.id.mtu_size);
+            tvMTU.setText("MTU Size: " + NetworkInterfacesUtils.getMTU());
         }
-
-        //Private IP address
-        TextView tvPrivateMobileIp = (TextView) childThirdNetwork.findViewById(R.id.mobile_private_ip_address);
-        tvPrivateMobileIp.setText("Private Ip Address:  " + NetworkInterfacesUtils.getPrivateIPAddress(true));
-
-        //Public IP address
-        TextView tvPublicMobileIp = (TextView) childThirdNetwork.findViewById(R.id.mobile_public_ip_address);
-        tvPublicMobileIp.setText("Public Ip Address: " + NetworkInterfacesUtils.getPublicIP());
-
-        //Mobile Mac Address
-        TextView tvMacAddress = (TextView) childThirdNetwork.findViewById(R.id.mobile_mac_address);
-        if (netInfo.getType() == connectivityManager.TYPE_WIFI && netInfo.isConnected()) {
-            tvMacAddress.setText("MAC Address: " + NetworkInterfacesUtils.getMACAddress("wlan0"));
-        } else {
-            tvMacAddress.setText("MAC Address: " + NetworkInterfacesUtils.getMACAddress("eth0"));
-        }
-
-
-        //Server IP address
-        TextView tvServerIp = (TextView) childThirdNetwork.findViewById(R.id.server_ip_address);
-        tvServerIp.setText("Server Ip Address: ");
-
-        //Default Gateway
-        TextView tvDefaultGateway = (TextView) childThirdNetwork.findViewById(R.id.default_gateway_address);
-        tvDefaultGateway.setText("Default Gateway: " + NetworkInterfacesUtils.getDefaultGateway());
-
-        //NetworkMask
-        TextView tvnetMask = (TextView) childThirdNetwork.findViewById(R.id.network_mask);
-        tvnetMask.setText("Network Mask: " + NetworkInterfacesUtils.getNetmask());
-
-        //MTU Size
-        TextView tvMTU = (TextView) childThirdNetwork.findViewById(R.id.mtu_size);
-        tvMTU.setText("MTU Size: " + NetworkInterfacesUtils.getMTU());
-
-
         return childThirdNetwork;
     }
 
 
+
+    private String getNetworkClass() {
+        int networkType = telephonyManager.getNetworkType();
+        switch (networkType) {
+            case TelephonyManager.NETWORK_TYPE_GPRS:
+            case TelephonyManager.NETWORK_TYPE_EDGE:
+            case TelephonyManager.NETWORK_TYPE_CDMA:
+            case TelephonyManager.NETWORK_TYPE_1xRTT:
+            case TelephonyManager.NETWORK_TYPE_IDEN:
+                return "2G";
+            case TelephonyManager.NETWORK_TYPE_UMTS:
+            case TelephonyManager.NETWORK_TYPE_EVDO_0:
+            case TelephonyManager.NETWORK_TYPE_EVDO_A:
+            case TelephonyManager.NETWORK_TYPE_HSDPA:
+            case TelephonyManager.NETWORK_TYPE_HSUPA:
+            case TelephonyManager.NETWORK_TYPE_HSPA:
+            case TelephonyManager.NETWORK_TYPE_EVDO_B:
+            case TelephonyManager.NETWORK_TYPE_EHRPD:
+            case TelephonyManager.NETWORK_TYPE_HSPAP:
+                return "3G";
+            case TelephonyManager.NETWORK_TYPE_LTE:
+                return "4G";
+            default:
+                return "Unknown";
+        }
+    }
 }
+
+
+
 
 

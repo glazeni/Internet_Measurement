@@ -103,6 +103,7 @@ public class NetworkInterfacesUtils {
         try {
             List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
             for (NetworkInterface intf : interfaces) {
+                Log.e("MAC", intf.getDisplayName().toString());
                 if (interfaceName != null) {
                     if (!intf.getName().equalsIgnoreCase(interfaceName)) continue;
                 }
@@ -191,7 +192,7 @@ public class NetworkInterfacesUtils {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
                 NetworkInterface intf = en.nextElement();
                 MTU = intf.getMTU();
-                Log.e("MTU" + MTU + "Interface" + intf.getDisplayName(), String.valueOf(MTU));
+                //Log.e("MTU" + MTU + "Interface" + intf.getDisplayName(), String.valueOf(MTU));
                 if (intf.getDisplayName() == "rmnet0") {
                     MTU = intf.getMTU();
                     break;
@@ -296,4 +297,6 @@ public class NetworkInterfacesUtils {
         }
         return publicIP;
     }
+
+
 }

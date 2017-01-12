@@ -1,9 +1,12 @@
 package internetmeasurement.android.main;
 
 
+import android.Manifest;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,11 +21,12 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     private TabLayout tabLayout;
     public ViewPager viewPager;
 
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
 
         //Disable Orientation
-        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         //Remove title bar
         this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         //Remove notification bar
@@ -39,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         //Initializing View Pager
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
+        assert viewPager != null;
+        viewPager.beginFakeDrag();
+
         //Creating PagerAdapter
         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), 4);
 
@@ -54,6 +61,12 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
         //Customization tabs within tabLayout
         setupTabViews();
+
+        //Request Permissions
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+
+
+
 
     }
 
