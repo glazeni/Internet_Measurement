@@ -2,9 +2,12 @@ package internetmeasurement.android.fragment.second;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -16,6 +19,8 @@ import internetmeasurement.android.R;
 
 
 public class SecondFragment extends Fragment {
+
+    private RecyclerView mRecyclerView=null;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,6 +53,12 @@ public class SecondFragment extends Fragment {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, \n yyyy \n h:mm a");
         String dateString = sdf.format(date);
         //textViewDate.setText(dateString);
+
+
+        //Recycler View
+        mRecyclerView = (RecyclerView) secondView.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
 
         return secondView;
     }
@@ -92,5 +103,13 @@ public class SecondFragment extends Fragment {
         graph.getViewport().setMinY(3.5);
         graph.getViewport().setMaxY(8);
 
+    }
+
+    private class resultsHolder extends RecyclerView.ViewHolder {
+        public TextView mTitleTextView;
+        public resultsHolder(View itemView) {
+            super(itemView);
+            mTitleTextView = (TextView) itemView;
+        }
     }
 }
