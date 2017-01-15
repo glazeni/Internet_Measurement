@@ -1,11 +1,9 @@
 package internetmeasurement.android.fragment.first;
 
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,6 +39,11 @@ public class FirstFragment extends Fragment {
     private Button startButton;
     private ProgressBar progressBar;
     private int progressStatus = 0;
+    public static int BLOCKSIZE_UPLINK=1500;
+    public static int BLOCKSIZE_DOWNLINK=2600;
+    public static int SOCKET_RCV_BUFFER=64000;
+    public static int SOCKET_SND_BUFFER=64000;
+    public static int SO_TIMEOUT=5000;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,9 +72,6 @@ public class FirstFragment extends Fragment {
         final WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
         //Network manager
         final ConnectivityManager connectManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        //Network Info
-        NetworkInfo networkInfo = connectManager.getActiveNetworkInfo();
-        //final String networkType = networkInfo.getTypeName();
 
 
         //Custom Font to SpinnerTitle
@@ -97,7 +97,8 @@ public class FirstFragment extends Fragment {
                     progressBar.setRotation(180);
                     updateProgressBar(0);
                 }
-
+                RunTCPClient runTCPClient = new RunTCPClient();
+                runTCPClient.execute();
                 pingCommand("ping -c 1 -w 1 google.com", false);
             }
         });
@@ -268,8 +269,16 @@ public class FirstFragment extends Fragment {
     public class RunTCPClient extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... params) {
-            String args[] = {"", ""};
+            String arg0 = String.valueOf(BLOCKSIZE_UPLINK);
+            String arg1 = String.valueOf(BLOCKSIZE_DOWNLINK);
+            String arg2 = String.valueOf(SOCKET_RCV_BUFFER);
+            String arg3 = String.valueOf(SOCKET_SND_BUFFER);
+            String arg4 = String.valueOf(SO_TIMEOUT);
+
+            String args[]={arg0,arg1,arg2,arg3,arg4};
             TCPClient.main(args);
+
+
             return null;
         }
 

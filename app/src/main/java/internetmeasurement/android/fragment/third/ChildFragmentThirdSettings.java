@@ -9,6 +9,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import internetmeasurement.android.R;
+import internetmeasurement.android.fragment.first.FirstFragment;
 
 /**
  * Created by glazen on 23/12/16.
@@ -25,13 +26,13 @@ public class ChildFragmentThirdSettings extends Fragment {
         //MTU Uplink Size
         TextView tvMTUuplinkSize = (TextView) childThird.findViewById(R.id.mtu_size_uplink);
         SeekBar mtuUplinkBar = (SeekBar) childThird.findViewById(R.id.mtu_uplink_bar);
-        mtuUplinkBar.setProgress(2000);
+        mtuUplinkBar.setProgress(1500);
         mtuUplinkBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
                 tvMTUuplinkSize.setText("MTU size Uplink: " + String.valueOf(progress) + " bytes");
+                FirstFragment.BLOCKSIZE_UPLINK = progress;
             }
 
             @Override
@@ -56,6 +57,7 @@ public class ChildFragmentThirdSettings extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tvMTUdownlinkSize.setText("MTU size Downlink: " + String.valueOf(progress) + " bytes");
+                FirstFragment.BLOCKSIZE_DOWNLINK = progress;
             }
 
             @Override
@@ -77,6 +79,7 @@ public class ChildFragmentThirdSettings extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tvSOrcvBuffer.setText("Socket Receive Buffer: " + String.valueOf(progress) + " bytes");
+                FirstFragment.SOCKET_RCV_BUFFER = progress;
             }
 
             @Override
@@ -98,6 +101,8 @@ public class ChildFragmentThirdSettings extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tvSOsndBuffer.setText("Socket Send Buffer: " + String.valueOf(progress) + " bytes");
+                FirstFragment.SOCKET_SND_BUFFER = progress;
+
             }
 
             @Override
@@ -119,6 +124,7 @@ public class ChildFragmentThirdSettings extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tvSOtimeout.setText("Socket Timeout: " + String.valueOf(progress) + " ms");
+                FirstFragment.SO_TIMEOUT = progress;
             }
 
             @Override
