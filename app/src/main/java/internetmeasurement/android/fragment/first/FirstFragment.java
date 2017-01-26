@@ -40,10 +40,11 @@ public class FirstFragment extends Fragment {
     private ProgressBar progressBar;
     private int progressStatus = 0;
     public static int BLOCKSIZE_UPLINK=1500;
-    public static int BLOCKSIZE_DOWNLINK=2600;
+    public static int BLOCKSIZE_DOWNLINK=1500;
     public static int SOCKET_RCV_BUFFER=64000;
     public static int SOCKET_SND_BUFFER=64000;
     public static int SO_TIMEOUT=5000;
+    public static int NUMBER_BLOCKS=1500;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,7 +100,8 @@ public class FirstFragment extends Fragment {
                 }
                 RunTCPClient runTCPClient = new RunTCPClient();
                 runTCPClient.execute();
-                pingCommand("ping -c 1 -w 1 google.com", false);
+                Log.d("DIR",getActivity().getCacheDir().getAbsolutePath());
+                //pingCommand("ping -c 1 -w 1 google.com", false);
             }
         });
 
@@ -274,8 +276,9 @@ public class FirstFragment extends Fragment {
             String arg2 = String.valueOf(SOCKET_RCV_BUFFER);
             String arg3 = String.valueOf(SOCKET_SND_BUFFER);
             String arg4 = String.valueOf(SO_TIMEOUT);
+            String arg5 = String.valueOf(NUMBER_BLOCKS);
 
-            String args[]={arg0,arg1,arg2,arg3,arg4};
+            String args[]={arg0,arg1,arg2,arg3,arg4,arg5};
             TCPClient.main(args);
 
 

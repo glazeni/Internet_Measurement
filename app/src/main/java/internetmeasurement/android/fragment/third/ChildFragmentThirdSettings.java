@@ -51,7 +51,7 @@ public class ChildFragmentThirdSettings extends Fragment {
         //MTU Downlink Size
         TextView tvMTUdownlinkSize = (TextView) childThird.findViewById(R.id.mtu_size_downlink);
         SeekBar mtuDownlinkBar = (SeekBar) childThird.findViewById(R.id.mtu_downlink_bar);
-        mtuDownlinkBar.setProgress(2600);
+        mtuDownlinkBar.setProgress(1500);
         mtuDownlinkBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
@@ -129,7 +129,7 @@ public class ChildFragmentThirdSettings extends Fragment {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                seekBar.setProgress(5000);
+
             }
 
             @Override
@@ -137,7 +137,27 @@ public class ChildFragmentThirdSettings extends Fragment {
 
             }
         });
+        //Number of MTUs
+        TextView tvNumberMTU = (TextView) childThird.findViewById(R.id.number_blocks);
+        SeekBar NumberMTUbar = (SeekBar) childThird.findViewById(R.id.number_blocks_bar);
+        NumberMTUbar.setProgress(1500);
+        NumberMTUbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tvNumberMTU.setText("Number of MTUs: " + String.valueOf(progress));
+                FirstFragment.NUMBER_BLOCKS = progress;
+            }
 
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         return childThird;
     }
