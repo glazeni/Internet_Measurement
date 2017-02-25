@@ -5,11 +5,9 @@
  */
 package internetmeasurement.android.TCPClient;
 
-import android.util.Log;
-
-import java.io.InputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Vector;
 
 import internetmeasurement.android.fragment.second.SecondFragment;
@@ -62,13 +60,11 @@ public class RTInputStream extends FilterInputStream {
         double bits = bytesTotal*8;
         if(bits>1000000){
             bits = bits/1000000;
-            SecondFragment.GraphYLabel = "MBits";
-            Log.d("MBs",String.valueOf(bits));
+            SecondFragment.tvGraphYLabel.setText("Bandwidth [MBits]");
             return bits;
         }else if(bits>1000){
             bits = bits/1000;
-            SecondFragment.GraphYLabel = "KBits";
-            Log.d("KBs",String.valueOf(bits));
+            SecondFragment.tvGraphYLabel.setText("Bandwidth [KBits]");
             return bits;
         }else{
             return bits;

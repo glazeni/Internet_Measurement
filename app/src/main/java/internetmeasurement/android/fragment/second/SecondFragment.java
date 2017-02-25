@@ -25,7 +25,7 @@ public class SecondFragment extends Fragment {
     public static LineGraphSeries<DataPoint> series=null;
     public static String GraphYLabel="";
     private List<Data> List = new ArrayList<>();
-
+    public static TextView tvGraphYLabel=null;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -39,8 +39,7 @@ public class SecondFragment extends Fragment {
 
         //GraphStyle
 
-        TextView tvGraphYLabel = (TextView) secondView.findViewById(R.id.graph_Y_label);
-        tvGraphYLabel.setText("Bandwidth [" + GraphYLabel + "]");
+        tvGraphYLabel = (TextView) secondView.findViewById(R.id.graph_Y_label);
         GraphView graph = (GraphView) secondView.findViewById(R.id.graph);
         //Fix Y-Axis Numbers from being cut off
         GridLabelRenderer glr = graph.getGridLabelRenderer();
