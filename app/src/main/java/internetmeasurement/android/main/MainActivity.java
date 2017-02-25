@@ -7,7 +7,6 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
@@ -19,7 +18,8 @@ import internetmeasurement.android.R;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
     private TabLayout tabLayout;
-    public ViewPager viewPager;
+    public CustomViewPager viewPager;
+    //public ViewPager viewPager;
 
 
     @Override
@@ -41,10 +41,8 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         //Initializing View Pager
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-
-        assert viewPager != null;
-        viewPager.beginFakeDrag();
+        //viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (CustomViewPager) findViewById(R.id.viewpager);
 
         //Creating PagerAdapter
         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), 4);
@@ -62,8 +60,15 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         //Customization tabs within tabLayout
         setupTabViews();
 
-        //Request Permissions
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+        //Disable ViewPager Horizontal Scroll/Swipe
+
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                viewPager.setSwipeable(false);
+                //Request Permissions
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+            }
+        });
 
 
 
@@ -92,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         //Create typeface to individual Textviews
         //Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/Eurosti.ttf");
         //Tab1 Custom View Text & Icon & Font
-        TextView tabText1  = (TextView) findViewById(R.id.tab1_text);
+        TextView tabText1 = (TextView) findViewById(R.id.tab1_text);
         tabText1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_network_check_white_24px, 0, 0);
         //tabText1.setTypeface(typeFace);
         //Tab2 Custom View Text & Icon & Font
@@ -100,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         tabText2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_assessment_white_24px, 0, 0);
         //tabText2.setTypeface(typeFace);
         //Tab3 Custom View Text & Icon & Font
-        TextView tabText3  = (TextView) findViewById(R.id.tab3_text);
+        TextView tabText3 = (TextView) findViewById(R.id.tab3_text);
         tabText3.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_settings_white_24px, 0, 0);
         //tabText3.setTypeface(typeFace);
         //Tab4 Custom View Text & Icon & Font
@@ -109,15 +114,15 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         //tabText4.setTypeface(typeFace);
 
         //Apply Custom Views to tabs
-            tabLayout.getTabAt(0).setCustomView(tabText1);
-            tabLayout.getTabAt(1).setCustomView(tabText2);
-            tabLayout.getTabAt(2).setCustomView(tabText3);
-            tabLayout.getTabAt(3).setCustomView(tabText4);
+        tabLayout.getTabAt(0).setCustomView(tabText1);
+        tabLayout.getTabAt(1).setCustomView(tabText2);
+        tabLayout.getTabAt(2).setCustomView(tabText3);
+        tabLayout.getTabAt(3).setCustomView(tabText4);
 
     }
+
     @Override
     public void onBackPressed() {
-
         //Quit Alert
         new AlertDialog.Builder(this)
                 .setTitle("Really Exit?")
@@ -127,8 +132,6 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
                     public void onClick(DialogInterface arg0, int arg1) {
                         MainActivity.super.onBackPressed();
-                        //int pid = getTaskId();
-                        //android.os.Process.killProcess(pid);
                         android.os.Process.killProcess(android.os.Process.myPid());
                     }
                 }).create().show();

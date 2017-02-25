@@ -17,60 +17,22 @@
         android:text="TCP Properties"
         android:textSize="30sp"/>
 
-
-    <!--NUMBER OF MTUs-->
+    <!-- PACKET SIZE -->
     <TextView
-        android:id="@+id/number_blocks"
+        android:id="@+id/mtu_size"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tcp_properties"
-        android:layout_marginTop="25dp"
-        android:text="Number of MTUs: 1500"
-        android:textSize="20sp"/>
-
-    <SeekBar
-        android:id="@+id/number_blocks_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/number_blocks"
-        android:max="3000"
-        android:thumbOffset="0dp"/>
-
-    <!--MTU UPLINK-->
-    <TextView
-        android:id="@+id/mtu_size_uplink"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/number_blocks"
-        android:layout_marginTop="25dp"
-        android:text="MTU Size Uplink: 1500 bytes "
+        android:layout_marginTop="120dp"
+        android:text="Packet Size: 1460 bytes "
         android:textSize="20sp"/>
 
 
     <SeekBar
-        android:id="@+id/mtu_uplink_bar"
+        android:id="@+id/mtu_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/mtu_size_uplink"
-        android:max="3000"
-        android:thumbOffset="0dp"/>
-
-    <!--MTU DOWNLINK-->
-    <TextView
-        android:id="@+id/mtu_size_downlink"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/mtu_uplink_bar"
-        android:layout_marginTop="10dp"
-        android:text="MTU Size Downlink: 2600 bytes "
-        android:textSize="20sp"/>
-
-    <SeekBar
-        android:id="@+id/mtu_downlink_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/mtu_size_downlink"
-        android:max="3000"
+        android:layout_below="@id/mtu_size"
+        android:max="8000"
         android:thumbOffset="0dp"/>
 
     <!--SOCKET RCV BUFFER-->
@@ -78,7 +40,7 @@
         android:id="@+id/socket_rcv_buffer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/mtu_downlink_bar"
+        android:layout_below="@+id/mtu_bar"
         android:layout_marginTop="10dp"
         android:text="Socket Receive Buffer: 64000 bytes"
         android:textSize="20sp"/>
@@ -117,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/socket_snd_bar"
         android:layout_marginTop="10dp"
-        android:text="Socket Timeout: 5000 ms"
+        android:text="Socket Timeout: 10000 ms"
         android:textSize="20sp"/>
 
     <SeekBar

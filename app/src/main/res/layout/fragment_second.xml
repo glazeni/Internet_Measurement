@@ -6,38 +6,38 @@
     android:layout_height="match_parent"
     tools:context=".fragment.second.SecondFragment">
 
-    <!--GRAPH VIEW LABELS AND CAPTIONS-->
-    <com.jjoe64.graphview.GraphView
-        android:id="@+id/graph"
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        android:layout_gravity="center|top"
-        android:layout_marginTop="50dp"/>
+        <!--GRAPH VIEW LABELS AND CAPTIONS-->
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/graph"
+            android:layout_width="320dp"
+            android:layout_height="200dp"
+            android:layout_alignRight="@+id/results_container"
+            android:layout_gravity="center|top"
+            android:layout_marginTop="50dp"/>
 
-    <TextView
-        android:id="@+id/graph_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:text="Bandwidth Estimation"
-        android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/graph_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="Bandwidth Estimation"
+            android:textSize="20sp"/>
 
-    <TextView
-        android:id="@+id/graph_X_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="250dp"
-        android:gravity="center"
-        android:text="Time/s"/>
+        <TextView
+            android:id="@+id/graph_X_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="250dp"
+            android:gravity="center"
+            android:text="Time[s]"/>
 
-    <TextView
-        android:id="@+id/graph_Y_label"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_marginTop="90dp"
-        android:rotation="-90"
-        android:text="Bandwidth"/>
+        <TextView
+            android:id="@+id/graph_Y_label"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_marginTop="90dp"
+            android:rotation="-90"/>
 
 
     <!-- BAR RESULT VIEW -->
@@ -64,6 +64,7 @@
                     android:layout_marginTop="5dp"
                     android:text="Connection"
                     android:textColor="@color/Black"
+                    android:textSize="12dp"
                     />
 
                 <ImageView
@@ -78,8 +79,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
                     android:layout_marginTop="5dp"
-                    android:text="Type"
+                    android:text="Algorithm"
                     android:textColor="@color/Black"
+                    android:textSize="12dp"
                     />
 
                 <ImageView
@@ -96,6 +98,7 @@
                     android:layout_marginTop="5dp"
                     android:text="Date"
                     android:textColor="@color/Black"
+                    android:textSize="12dp"
                     />
 
                 <ImageView
@@ -112,12 +115,13 @@
                     android:layout_marginTop="5dp"
                     android:text="Average"
                     android:textColor="@color/Black"
+                    android:textSize="12dp"
                     />
 
                 <ImageView
-                    android:layout_marginLeft="2dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
                     android:layout_marginTop="2dp"
                     android:src="@drawable/ic_speed_test"/>
 
@@ -130,6 +134,7 @@
                     android:layout_marginTop="5dp"
                     android:text="Ping"
                     android:textColor="@color/Black"
+                    android:textSize="12dp"
                     />
 
                 <ImageView
@@ -140,11 +145,12 @@
             </TableRow>
         </TableLayout>
     </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/recycler_view"
-        android:layout_below="@+id/results_container"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/results_container"/>
 
 </RelativeLayout>

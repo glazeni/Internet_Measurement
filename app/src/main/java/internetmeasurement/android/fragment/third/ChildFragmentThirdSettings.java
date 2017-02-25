@@ -9,7 +9,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import internetmeasurement.android.R;
-import internetmeasurement.android.fragment.first.FirstFragment;
+import internetmeasurement.android.TCPClient.Constants;
 
 /**
  * Created by glazen on 23/12/16.
@@ -24,15 +24,15 @@ public class ChildFragmentThirdSettings extends Fragment {
         View childThird = inflater.inflate(R.layout.fragment_child_third_settings, container, false);
 
         //MTU Uplink Size
-        TextView tvMTUuplinkSize = (TextView) childThird.findViewById(R.id.mtu_size_uplink);
-        SeekBar mtuUplinkBar = (SeekBar) childThird.findViewById(R.id.mtu_uplink_bar);
-        mtuUplinkBar.setProgress(1500);
-        mtuUplinkBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        TextView tvMTUsize = (TextView) childThird.findViewById(R.id.mtu_size);
+        SeekBar mtuBar = (SeekBar) childThird.findViewById(R.id.mtu_bar);
+        mtuBar.setProgress(1500);
+        mtuBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tvMTUuplinkSize.setText("MTU size Uplink: " + String.valueOf(progress) + " bytes");
-                FirstFragment.BLOCKSIZE_UPLINK = progress;
+                tvMTUsize.setText("Packet Size: " + String.valueOf(progress) + " bytes");
+                Constants.BLOCKSIZE = progress;
             }
 
             @Override
@@ -45,29 +45,6 @@ public class ChildFragmentThirdSettings extends Fragment {
 
             }
 
-
-        });
-
-        //MTU Downlink Size
-        TextView tvMTUdownlinkSize = (TextView) childThird.findViewById(R.id.mtu_size_downlink);
-        SeekBar mtuDownlinkBar = (SeekBar) childThird.findViewById(R.id.mtu_downlink_bar);
-        mtuDownlinkBar.setProgress(1500);
-        mtuDownlinkBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tvMTUdownlinkSize.setText("MTU size Downlink: " + String.valueOf(progress) + " bytes");
-                FirstFragment.BLOCKSIZE_DOWNLINK = progress;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
 
         });
 
@@ -79,7 +56,7 @@ public class ChildFragmentThirdSettings extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tvSOrcvBuffer.setText("Socket Receive Buffer: " + String.valueOf(progress) + " bytes");
-                FirstFragment.SOCKET_RCV_BUFFER = progress;
+                Constants.SOCKET_RCVBUF = progress;
             }
 
             @Override
@@ -101,7 +78,7 @@ public class ChildFragmentThirdSettings extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tvSOsndBuffer.setText("Socket Send Buffer: " + String.valueOf(progress) + " bytes");
-                FirstFragment.SOCKET_SND_BUFFER = progress;
+                Constants.SOCKET_SNDBUF = progress;
 
             }
 
@@ -119,33 +96,12 @@ public class ChildFragmentThirdSettings extends Fragment {
         //Socket Timeout
         TextView tvSOtimeout = (TextView) childThird.findViewById(R.id.socket_timeout);
         SeekBar SOtimeoutBar = (SeekBar) childThird.findViewById(R.id.socket_timeout_bar);
-        SOtimeoutBar.setProgress(5000);
+        SOtimeoutBar.setProgress(10000);
         SOtimeoutBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tvSOtimeout.setText("Socket Timeout: " + String.valueOf(progress) + " ms");
-                FirstFragment.SO_TIMEOUT = progress;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-        //Number of MTUs
-        TextView tvNumberMTU = (TextView) childThird.findViewById(R.id.number_blocks);
-        SeekBar NumberMTUbar = (SeekBar) childThird.findViewById(R.id.number_blocks_bar);
-        NumberMTUbar.setProgress(1500);
-        NumberMTUbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tvNumberMTU.setText("Number of MTUs: " + String.valueOf(progress));
-                FirstFragment.NUMBER_BLOCKS = progress;
+                Constants.SO_TIMEOUT = progress;
             }
 
             @Override

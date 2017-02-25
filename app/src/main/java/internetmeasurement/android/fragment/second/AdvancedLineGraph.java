@@ -3,8 +3,6 @@ package internetmeasurement.android.fragment.second;
 import android.view.View;
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
 
 import internetmeasurement.android.R;
@@ -12,7 +10,7 @@ import internetmeasurement.android.R;
 /**
  * Created by jonas on 10.09.16.
  */
-public class AdvancedLineGraph {
+public class AdvancedLineGraph{
     private Series mSeries;
     private View mView;
 
@@ -28,7 +26,7 @@ public class AdvancedLineGraph {
         try {
             graph.addSeries(mSeries);
 
-            // second series
+            /*// second series
             LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(new DataPoint[]{
                     new DataPoint(0, 3),
                     new DataPoint(1, 3),
@@ -41,7 +39,7 @@ public class AdvancedLineGraph {
             //series2.setColor(Color.argb(255, 255, 60, 60));
             //series2.setBackgroundColor(Color.argb(100, 204, 119, 119));
             //series2.setDrawDataPoints(true);
-            graph.addSeries(series2);
+            graph.addSeries(series2);*/
 
             // Caption
             graph.getLegendRenderer().setVisible(true);

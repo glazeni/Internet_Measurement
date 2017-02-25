@@ -2,13 +2,16 @@ package internetmeasurement.android.fragment.first;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -23,28 +28,23 @@ import android.widget.TextView;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import Client.TCPClient;
 import internetmeasurement.android.R;
+import internetmeasurement.android.TCPClient.Connection;
+import internetmeasurement.android.TCPClient.TCPClient;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FirstFragment extends Fragment {
     protected Spinner mSpinner1 = null;
-    protected Spinner mSpinner2 = null;
     protected ArrayAdapter<String> mAdapter1 = null;
-    protected ArrayAdapter<String> mAdapter2 = null;
     private int mIndex1 = 0;
-    private int mIndex2 = 0;
+
     private Button startButton;
-    private ProgressBar progressBar;
+    public static ProgressBar progressBar;
     private int progressStatus = 0;
-    public static int BLOCKSIZE_UPLINK=1500;
-    public static int BLOCKSIZE_DOWNLINK=1500;
-    public static int SOCKET_RCV_BUFFER=64000;
-    public static int SOCKET_SND_BUFFER=64000;
-    public static int SO_TIMEOUT=5000;
-    public static int NUMBER_BLOCKS=1500;
+    private boolean isIperfSettings;
+    private boolean isNagleDisable;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +73,8 @@ public class FirstFragment extends Fragment {
         final WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
         //Network manager
         final ConnectivityManager connectManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-
+        //Telephony manager
+        final TelephonyManager telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
 
         //Custom Font to SpinnerTitle
         //TextView spinner1_title = (TextView) firstView.findViewById(R.id.spinner_text_1);
@@ -88,19 +89,12 @@ public class FirstFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int pos = mSpinner2.getSelectedItemPosition();
-                if (pos == 0) {
-                    if (progressBar.getRotation() == 180) {
-                        progressBar.setRotation(0);
-                    }
-                    updateProgressBar(0);
-                } else if (pos == 1) {
-                    progressBar.setRotation(180);
-                    updateProgressBar(0);
-                }
-                RunTCPClient runTCPClient = new RunTCPClient();
-                runTCPClient.execute();
-                Log.d("DIR",getActivity().getCacheDir().getAbsolutePath());
+
+                TCPClient tcpClient = new TCPClient(isIperfSettings, isNagleDisable);
+                tcpClient.execute();
+
+                //RunTCPClient runTCPClient = new RunTCPClient();
+                //runTCPClient.execute();
                 //pingCommand("ping -c 1 -w 1 google.com", false);
             }
         });
@@ -142,11 +136,22 @@ public class FirstFragment extends Fragment {
                 // Notify the selected item text
                 //String selectedItemText = (String) parent.getItemAtPosition(position);
                 //Toast.makeText(getContext(), "Selected : " + selectedItemText, Toast.LENGTH_SHORT).show();
+
+
                 //Wi-Fi Selected
-
-
                 if (position == 1) {
-                    if (!wifiManager.isWifiEnabled()) {
+                    if (connectManager.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED || connectManager.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTING) {
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("You need to turn off mobile data to perform Wi-Fi measurements")
+                                .setMessage("Do you want to turn it off?")
+                                .setNegativeButton(android.R.string.no, null)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface arg0, int arg1) {
+                                        startActivityForResult(new Intent(Settings.ACTION_SETTINGS), 0);
+
+                                    }
+                                }).create().show();
+                    } else if (!wifiManager.isWifiEnabled()) {
                         new AlertDialog.Builder(getContext())
                                 .setTitle("Wi-Fi is needed to perform operation")
                                 .setMessage("Do you want to turn it on?")
@@ -161,15 +166,56 @@ public class FirstFragment extends Fragment {
                 }
                 //3G Selected
                 if (position == 2) {
+                    if (wifiManager.isWifiEnabled()) {
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("You need to turn off Wi-Fi to perform Cellular measurement")
+                                .setMessage("Do you want to turn it off?")
+                                .setNegativeButton(android.R.string.no, null)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface arg0, int arg1) {
+                                        startActivityForResult(new Intent(Settings.ACTION_SETTINGS), 0);
 
+                                    }
+                                }).create().show();
+                    } else if (connectManager.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED) {
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Mobile Data is needed to perform operation")
+                                .setMessage("Do you want to turn it on?")
+                                .setNegativeButton(android.R.string.no, null)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface arg0, int arg1) {
+                                        startActivityForResult(new Intent(Settings.ACTION_SETTINGS), 0);
+
+                                    }
+                                }).create().show();
+                    }
                 }
                 //4G Selected
                 if (position == 3) {
+                    if (wifiManager.isWifiEnabled()) {
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("You need to turn off Wi-Fi to perform Cellular measurement")
+                                .setMessage("Do you want to turn it off?")
+                                .setNegativeButton(android.R.string.no, null)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface arg0, int arg1) {
+                                        startActivityForResult(new Intent(Settings.ACTION_SETTINGS), 0);
 
-                    //Toast.makeText(getContext(), "Selected : " + selectedItemText, Toast.LENGTH_SHORT).show();
+                                    }
+                                }).create().show();
+                    } else if (connectManager.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED) {
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Mobile Data is needed to perform operation")
+                                .setMessage("Do you want to turn it on?")
+                                .setNegativeButton(android.R.string.no, null)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface arg0, int arg1) {
+                                        startActivityForResult(new Intent(Settings.ACTION_SETTINGS), 0);
+
+                                    }
+                                }).create().show();
+                    }
                 }
-
-
             }
 
 
@@ -178,15 +224,33 @@ public class FirstFragment extends Fragment {
 
             }
 
-
         });
 
-        /********************************         SPINNER 2 DEFINITION     ***************************************/
-        mAdapter2 = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, algorithms);
-        mAdapter2.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        mSpinner2 = (Spinner) firstView.findViewById(R.id.spinner2);
-        mSpinner2.setPrompt("Select your measurement type");
-        mSpinner2.setAdapter(mAdapter2);
+
+        //CheckBox's
+        CheckBox checkBoxNagle = (CheckBox) firstView.findViewById(R.id.checkbox_nagle);
+        checkBoxNagle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isNagleDisable = isChecked;
+            }
+        });
+
+        CheckBox checkBoxIperfSettings = (CheckBox) firstView.findViewById(R.id.checkbox_iperfsettings);
+        checkBoxIperfSettings.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isIperfSettings = isChecked;
+            }
+        });
+
+        CheckBox checkBoxThesisSettings = (CheckBox) firstView.findViewById(R.id.checkbox_thesissettings);
+        checkBoxThesisSettings.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isIperfSettings = !isChecked;
+            }
+        });
 
 
         return firstView;
@@ -198,13 +262,9 @@ public class FirstFragment extends Fragment {
         //Restore the fragment's state
         if (savedInstanceState != null) {
             mIndex1 = savedInstanceState.getInt("SpinnerPosition1");
-            mIndex2 = savedInstanceState.getInt("SpinnerPosition2");
-            progressStatus = savedInstanceState.getInt("ProgressBarStatus");
-            updateProgressBar(progressStatus);
+            //progressStatus = savedInstanceState.getInt("ProgressBarStatus");
+            //updateProgressBar_PacketTrainUP();
             mSpinner1.setSelection(mIndex1);
-            mSpinner2.setSelection(mIndex2);
-
-
         }
     }
 
@@ -213,8 +273,7 @@ public class FirstFragment extends Fragment {
         super.onSaveInstanceState(outState);
         //Save the fragment's state here
         outState.putInt("SpinnerPosition1", mSpinner1.getSelectedItemPosition());
-        outState.putInt("SpinnerPosition2", mSpinner2.getSelectedItemPosition());
-        outState.putInt("ProgressBarStatus", progressStatus);
+        //outState.putInt("ProgressBarStatus", progressStatus);
     }
 
 
@@ -243,32 +302,57 @@ public class FirstFragment extends Fragment {
 
     }
 
-    private void updateProgressBar(int pbStatus) {
+    public static void updateProgressBar_up() {
         new Thread() {
             @Override
             public void run() {
-                //super.run();
                 try {
-                    progressStatus = pbStatus;
-                    while (progressStatus <= 100) {
-
-                        sleep(500);
-                        progressBar.setProgress(progressStatus);
-                        progressStatus += 1;
+                    progressBar.setProgress(0);
+                    long end = System.currentTimeMillis() + Connection.runningTime;
+                    long start = System.currentTimeMillis();
+                    while (System.currentTimeMillis() < end) {
+                        if (System.currentTimeMillis() >= (start + 1000)) {
+                            progressBar.incrementProgressBy(3);
+                            start = System.currentTimeMillis();
+                        }
                     }
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 } finally {
-                    if (progressStatus >= 100) {
-                        progressBar.setProgress(0);
-                    }
+                    progressBar.setProgress(0);
                 }
             }
         }.start();
     }
 
-    public class RunTCPClient extends AsyncTask<Void, Void, String> {
+    public static void updateProgressBar_down() {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    progressBar.setProgress(0);
+                    progressBar.setRotation(180);
+                    long end = System.currentTimeMillis() + Connection.runningTime;
+                    long start = System.currentTimeMillis();
+                    while (System.currentTimeMillis() < end) {
+                        if (System.currentTimeMillis() >= (start + 1000)) {
+                            progressBar.incrementProgressBy(3);
+                            start = System.currentTimeMillis();
+                        }
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                } finally {
+                    progressBar.setProgress(0);
+                }
+            }
+        }.start();
+    }
+}
+
+
+//Run Jar in Android
+    /*public class RunTCPClient extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... params) {
             String arg0 = String.valueOf(BLOCKSIZE_UPLINK);
@@ -278,9 +362,19 @@ public class FirstFragment extends Fragment {
             String arg4 = String.valueOf(SO_TIMEOUT);
             String arg5 = String.valueOf(NUMBER_BLOCKS);
 
-            String args[]={arg0,arg1,arg2,arg3,arg4,arg5};
-            TCPClient.main(args);
+            String args[] = {arg0, arg1, arg2, arg3, arg4, arg5};
+            //TCPClient.main(args);
+*//*            Socket clientSocket;
 
+            try {
+                ServerSocket listenSocket = new ServerSocket(20001);
+                clientSocket = listenSocket.accept();
+                DataInputStream dis = new DataInputStream(clientSocket.getInputStream());
+
+                System.err.println("INT:" +dis.readInt());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }*//*
 
             return null;
         }
@@ -296,7 +390,7 @@ public class FirstFragment extends Fragment {
         }
     }
 }
-
+*/
 
 
 

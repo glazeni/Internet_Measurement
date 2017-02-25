@@ -33,37 +33,36 @@
             android:spinnerMode="dialog"/>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/spinner2_container"
-        android:layout_width="match_parent"
+    <CheckBox
+        android:id="@+id/checkbox_nagle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginTop="120dp"
+        android:text="Disable Nagle Algorithm"
+        android:textSize="15sp"/>
 
-        <TextView
-            android:id="@+id/spinner_text_2"
-            style="@style/FontAppearance"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="120dp"
-            android:text="@string/algorithm_type"
-            android:textSize="20dp"/>
+    <CheckBox
+        android:id="@+id/checkbox_iperfsettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="170dp"
+        android:text="Iperf Settings"
+        android:textSize="15sp"/>
 
-        <Spinner
-            android:id="@+id/spinner2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/spinner_text_2"
-            android:prompt="@string/spinner_title"
-            android:spinnerMode="dialog"/>
-
-    </RelativeLayout>
+    <CheckBox
+        android:id="@+id/checkbox_thesissettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="220dp"
+        android:text="Thesis Settings"
+        android:textSize="15sp"/>
 
     <Button
         android:id="@+id/button_start"
         android:layout_width="130dp"
         android:layout_height="60dp"
         android:layout_marginLeft="110dp"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="300dp"
         android:background="@drawable/ic_begin_test_button"
         android:enabled="true"
         android:gravity="center"
@@ -93,17 +92,17 @@
         style="@android:style/Widget.Material.ProgressBar.Horizontal"
         android:layout_width="220dp"
         android:layout_height="5dp"
-        android:progressDrawable="@drawable/color_progress"
         android:layout_marginLeft="60dp"
         android:layout_marginTop="432dp"
-        android:max="100"/>
+        android:max="100"
+        android:progressDrawable="@drawable/color_progress"/>
 
 
- <!--   <com.daimajia.numberprogressbar.NumberProgressBar
-        android:id="@+id/number_progress_bar"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginTop="430dp"
-        />-->
+    <!--   <com.daimajia.numberprogressbar.NumberProgressBar
+           android:id="@+id/number_progress_bar"
+           android:layout_width="220dp"
+           android:layout_height="wrap_content"
+           android:layout_marginLeft="60dp"
+           android:layout_marginTop="430dp"
+           />-->
 </RelativeLayout>
