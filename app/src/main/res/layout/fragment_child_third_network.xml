@@ -64,7 +64,7 @@
         android:textSize="20sp"/>
 
     <TextView
-        android:id="@+id/mtu_size"
+        android:id="@+id/mtu_size_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/network_mask"
@@ -75,7 +75,7 @@
         android:id="@+id/extra_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/mtu_size"
+        android:layout_below="@+id/mtu_size_up"
         android:layout_marginTop="10dp"
         android:textSize="20sp"/>
 

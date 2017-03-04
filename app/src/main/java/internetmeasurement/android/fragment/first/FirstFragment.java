@@ -24,6 +24,7 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -42,8 +43,6 @@ public class FirstFragment extends Fragment {
 
     private Button startButton;
     public static ProgressBar progressBar;
-    private int progressStatus = 0;
-    private boolean isIperfSettings;
     private boolean isNagleDisable;
 
     @Override
@@ -89,13 +88,12 @@ public class FirstFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                TCPClient tcpClient = new TCPClient(isIperfSettings, isNagleDisable);
+                TCPClient tcpClient = new TCPClient(isNagleDisable);
                 tcpClient.execute();
-
+                Toast.makeText(getContext(), "Measurement Test Started!", Toast.LENGTH_SHORT).show();
                 //RunTCPClient runTCPClient = new RunTCPClient();
                 //runTCPClient.execute();
-                //pingCommand("ping -c 1 -w 1 google.com", false);
+                pingCommand("ping -c 1 -w 1 google.com", false);
             }
         });
 
@@ -114,8 +112,8 @@ public class FirstFragment extends Fragment {
                 //Custom Font Spinner items
                 //Typeface typeFace_item = Typeface.createFromAsset(getContext().getAssets(), "fonts/Eurosti.ttf");
                 //tv.setTypeface(typeFace_item);
-
                 if (position == mSpinner1.getSelectedItemPosition()) {
+                    Log.d("SPINNER1",mSpinner1.getSelectedItem().toString());
                     // Set the hint text color gray
                     tv.setTextColor(Color.GRAY);
                 } else {
@@ -135,7 +133,6 @@ public class FirstFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Notify the selected item text
                 //String selectedItemText = (String) parent.getItemAtPosition(position);
-                //Toast.makeText(getContext(), "Selected : " + selectedItemText, Toast.LENGTH_SHORT).show();
 
 
                 //Wi-Fi Selected
@@ -235,23 +232,6 @@ public class FirstFragment extends Fragment {
                 isNagleDisable = isChecked;
             }
         });
-
-        CheckBox checkBoxIperfSettings = (CheckBox) firstView.findViewById(R.id.checkbox_iperfsettings);
-        checkBoxIperfSettings.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                isIperfSettings = isChecked;
-            }
-        });
-
-        CheckBox checkBoxThesisSettings = (CheckBox) firstView.findViewById(R.id.checkbox_thesissettings);
-        checkBoxThesisSettings.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                isIperfSettings = !isChecked;
-            }
-        });
-
 
         return firstView;
     }

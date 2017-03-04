@@ -7,13 +7,14 @@ package internetmeasurement.android.TCPClient;
 
 import com.jjoe64.graphview.series.DataPoint;
 
+import java.text.SimpleDateFormat;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import internetmeasurement.android.fragment.second.SecondFragment;
 
 /**
- *
  * @author glazen
  */
 public class ReminderClient extends Thread {
@@ -22,7 +23,7 @@ public class ReminderClient extends Thread {
     private DataMeasurement dataMeasurement = null;
     private RTInputStream RTin = null;
     private int i = 0;
-    public static double scale=0;
+    private static final AtomicInteger count = new AtomicInteger(0);
 
     public ReminderClient(int seconds, DataMeasurement _dataMeasurement, RTInputStream _RTin) {
         this.dataMeasurement = _dataMeasurement;
@@ -38,9 +39,9 @@ public class ReminderClient extends Thread {
     }
 
     class RemindTask extends TimerTask {
-
+        SimpleDateFormat sdf=null;
         public RemindTask() {
-            //Do nothihng in constructor
+            //Do nothing in constructor
         }
 
         @Override
@@ -51,7 +52,11 @@ public class ReminderClient extends Thread {
             } catch (Exception ex) {
                 ex.printStackTrace();
             } finally {
-                SecondFragment.series.appendData(new DataPoint(i, RTin.getBitsConversion()), true, 40);
+                if (i == 0) {
+                    SecondFragment.series.appendData(new DataPoint(count.get(), 0), true, 40);
+                } else {
+                    SecondFragment.series.appendData(new DataPoint(count.incrementAndGet(), RTin.getBitsConversion()), true, 40);
+                }
                 RTin.clearBytes();
                 i++;
             }

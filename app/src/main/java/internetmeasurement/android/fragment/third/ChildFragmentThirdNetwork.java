@@ -43,9 +43,9 @@ public class ChildFragmentThirdNetwork extends Fragment {
 
         //Connection type
         NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
-        Log.d("CONNECTIVITY-MANAGER", activeNetInfo.toString());
 
-        if (!activeNetInfo.isAvailable() && !activeNetInfo.isConnected()) {
+
+        if (activeNetInfo==null || (!activeNetInfo.isAvailable() && !activeNetInfo.isConnected())) {
             TextView tvConnectionType = (TextView) childThirdNetwork.findViewById(R.id.connection_type);
             tvConnectionType.setText("No active connection!");
         } else {
@@ -113,7 +113,7 @@ public class ChildFragmentThirdNetwork extends Fragment {
             tvnetMask.setText("Network Mask: " + NetworkInterfacesUtils.getNetmask());
 
             //MTU Size
-            TextView tvMTU = (TextView) childThirdNetwork.findViewById(R.id.mtu_size);
+            TextView tvMTU = (TextView) childThirdNetwork.findViewById(R.id.mtu_size_up);
             tvMTU.setText("MTU Size: " + NetworkInterfacesUtils.getMTU());
         }
         return childThirdNetwork;

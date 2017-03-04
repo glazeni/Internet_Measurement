@@ -17,22 +17,80 @@
         android:text="TCP Properties"
         android:textSize="30sp"/>
 
-    <!-- PACKET SIZE -->
+    <!-- NUMBER PACKETS -->
     <TextView
-        android:id="@+id/mtu_size"
+        android:id="@+id/number_packets"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
-        android:text="Packet Size: 1460 bytes "
+        android:layout_marginTop="100dp"
+        android:text="Number Packets: 50 in the Train"
         android:textSize="20sp"/>
 
 
     <SeekBar
-        android:id="@+id/mtu_bar"
+        android:id="@+id/number_packets_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/mtu_size"
+        android:layout_below="@id/number_packets"
+        android:max="1000"
+        android:thumbOffset="0dp"/>
+
+    <!-- PACKET SIZE UPLINK -->
+    <TextView
+        android:id="@+id/mtu_size_up"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/number_packets_bar"
+        android:layout_marginTop="10dp"
+        android:text="Packet Size Uplink: 512 bytes "
+        android:textSize="20sp"/>
+
+
+    <SeekBar
+        android:id="@+id/mtu_bar_up"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mtu_size_up"
         android:max="8000"
+        android:thumbOffset="0dp"/>
+
+    <!-- PACKET SIZE DOWNLINK-->
+    <TextView
+        android:id="@+id/mtu_size_down"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mtu_bar_up"
+        android:layout_marginTop="10dp"
+        android:text="Packet Size Downlink: 1024 bytes "
+        android:textSize="20sp"/>
+
+
+    <SeekBar
+        android:id="@+id/mtu_bar_down"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mtu_size_down"
+        android:max="8000"
+        android:thumbOffset="0dp"/>
+
+
+    <!-- BUFFERS SIZE -->
+    <TextView
+        android:id="@+id/buffer_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mtu_bar_down"
+        android:layout_marginTop="10dp"
+        android:text="Buffer Size: 256000 bytes "
+        android:textSize="20sp"/>
+
+
+    <SeekBar
+        android:id="@+id/buffer_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buffer_size"
+        android:max="256000"
         android:thumbOffset="0dp"/>
 
     <!--SOCKET RCV BUFFER-->
@@ -40,9 +98,9 @@
         android:id="@+id/socket_rcv_buffer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/mtu_bar"
+        android:layout_below="@+id/buffer_bar"
         android:layout_marginTop="10dp"
-        android:text="Socket Receive Buffer: 64000 bytes"
+        android:text="Socket Receive Buffer: 128000 bytes"
         android:textSize="20sp"/>
 
 
@@ -51,7 +109,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/socket_rcv_buffer"
-        android:max="64000"
+        android:max="512000"
         android:thumbOffset="0dp"/>
 
     <!--SOCKET SND BUFFER-->
@@ -61,7 +119,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/socket_rcv_bar"
         android:layout_marginTop="10dp"
-        android:text="Socket Send Buffer: 64000 bytes"
+        android:text="Socket Send Buffer: 128000 bytes"
         android:textSize="20sp"/>
 
     <SeekBar
@@ -69,7 +127,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/socket_snd_buffer"
-        android:max="64000"
+        android:max="512000"
         android:thumbOffset="0dp"/>
 
     <!--SOCKET Timeout-->
@@ -79,7 +137,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/socket_snd_bar"
         android:layout_marginTop="10dp"
-        android:text="Socket Timeout: 10000 ms"
+        android:text="Socket Timeout: 30000 ms"
         android:textSize="20sp"/>
 
     <SeekBar
@@ -87,7 +145,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/socket_timeout"
-        android:max="10000"
+        android:max="60000"
         android:thumbOffset="0dp"/>
 
 </RelativeLayout>

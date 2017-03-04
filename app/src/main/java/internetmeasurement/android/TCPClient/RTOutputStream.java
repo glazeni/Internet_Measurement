@@ -5,37 +5,31 @@
  */
 package internetmeasurement.android.TCPClient;
 
-import java.io.OutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
-import java.util.Vector;
+import java.io.OutputStream;
 
 public class RTOutputStream extends FilterOutputStream {
 
-    public Vector<Long> writeTimeVector = null;
 
-    RTOutputStream(OutputStream out) {
+    public RTOutputStream(OutputStream out) {
         super(out);
-        writeTimeVector = new Vector<Long>();
     }
 
     @Override
     public void write(int b) throws IOException {
-        long start = 0;
         super.write(b);
         super.flush();
     }
 
     @Override
     public void write(byte data[]) throws IOException {
-        long start = 0;
         super.write(data);
         super.flush();  
     }
 
     @Override
     public void write(byte data[], int off, int len) throws IOException {
-        long start = 0;
         super.write(data, off, len);
         super.flush();
     }

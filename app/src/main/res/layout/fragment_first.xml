@@ -20,7 +20,7 @@
             android:id="@+id/spinner_text_1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="50dp"
             android:text="@string/measurement_type"
             android:textSize="20dp"/>
 
@@ -37,24 +37,8 @@
         android:id="@+id/checkbox_nagle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="150dp"
         android:text="Disable Nagle Algorithm"
-        android:textSize="15sp"/>
-
-    <CheckBox
-        android:id="@+id/checkbox_iperfsettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="170dp"
-        android:text="Iperf Settings"
-        android:textSize="15sp"/>
-
-    <CheckBox
-        android:id="@+id/checkbox_thesissettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="220dp"
-        android:text="Thesis Settings"
         android:textSize="15sp"/>
 
     <Button

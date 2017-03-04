@@ -8,70 +8,60 @@ package internetmeasurement.android.TCPClient;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Vector;
-
-import internetmeasurement.android.fragment.second.SecondFragment;
 
 public class RTInputStream extends FilterInputStream {
 
     private int bytesTotal = 0;
-    public static int bytesGraph=0;
-    public Vector<Long> readTimeVector = null;
 
     public RTInputStream(InputStream in) {
         super(in);
-        readTimeVector = new Vector<Long>();
     }
 
     @Override
     public int read() throws IOException {
-        long start = 0;
         int cnt = super.read();
         return cnt;
     }
-    
+
 
     @Override
     public int read(byte data[]) throws IOException {
-        long start = 0;
         int cnt = super.read(data);
         return cnt;
     }
 
     @Override
     public int read(byte data[], int off, int len) throws IOException {
-        long start = System.currentTimeMillis();
         int count = super.read(data, off, len);
 
         bytesTotal += count;//Sum of all read bytes
-        bytesGraph += count * 8; //Sum of all read bits to be shown in bandwidth graph
         return count;
     }
-    
-    public int getBytes(){
+
+    public int getBytes() {
         return bytesTotal;
     }
-    
-    public int getBytes2Bits(){
-        return bytesTotal*8;
+
+    public int getBytes2Bits() {
+        return bytesTotal * 8;
     }
 
-    public double getBitsConversion(){
-        double bits = bytesTotal*8;
-        if(bits>1000000){
-            bits = bits/1000000;
-            SecondFragment.tvGraphYLabel.setText("Bandwidth [MBits]");
+    public double getBitsConversion() {
+        double bits = bytesTotal * 8;
+        if (bits > 1000000) {
+            bits = bits / 1000000;
+            //SecondFragment.tvGraphYLabel.setText("Bandwidth [MBits]");
             return bits;
-        }else if(bits>1000){
-            bits = bits/1000;
-            SecondFragment.tvGraphYLabel.setText("Bandwidth [KBits]");
-            return bits;
-        }else{
+//        }else if(bits>1000){
+//            bits = bits/1000;
+//            //SecondFragment.tvGraphYLabel.setText("Bandwidth [KBits]");
+//            return bits;
+        } else {
             return bits;
         }
     }
 
-    public void clearBytes(){
-        bytesTotal=0;
+    public void clearBytes() {
+        bytesTotal = 0;
     }
 }

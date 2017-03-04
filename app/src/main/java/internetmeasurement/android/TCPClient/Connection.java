@@ -3,11 +3,15 @@
  */
 package internetmeasurement.android.TCPClient;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Vector;
+import java.util.Random;
+import java.util.concurrent.locks.LockSupport;
 
 import internetmeasurement.android.fragment.first.FirstFragment;
 
@@ -20,32 +24,32 @@ public class Connection extends Thread {
     private RTOutputStream RTout = null;
     private DataInputStream dataIn = null;
     private DataOutputStream dataOut = null;
+    private PrintWriter outCtrl = null;
+    private BufferedReader inCtrl = null;
+
     private DataMeasurement dataMeasurement = null;
     private ReminderClient reminderClient = null;
     private int byteCnt = 0;
     private boolean isThreadMethod;
     private String METHOD = null;
-    private Vector<Integer> AvailableBW = null;
     private TCP_Properties TCP_param = null;
-    public static long runningTime = 35000;
+    public static long runningTime = 5000;
     private int ID = 0;
-    private boolean isIperfSettings;
     private boolean isNagleDisable;
-    private long firstPacket = 0;
-    private long lastPacket = 0;
 
-    public Connection(int _ID, Socket _s, DataMeasurement _dataMeasurement, boolean _isIperfSettings, boolean _isNagleDisable) {
+    public Connection(int _ID, Socket _s, DataMeasurement _dataMeasurement, boolean _isNagleDisable) {
         try {
             this.ID = _ID;
             this.s = _s;
             this.dataMeasurement = _dataMeasurement;
-            this.isIperfSettings = _isIperfSettings;
             this.isNagleDisable = _isNagleDisable;
             RTin = new RTInputStream(s.getInputStream());
             RTout = new RTOutputStream(s.getOutputStream());
             dataIn = new DataInputStream(RTin);
             dataOut = new DataOutputStream(RTout);
-            AvailableBW = new Vector<Integer>();
+            outCtrl = new PrintWriter(RTout, true);
+            inCtrl = new BufferedReader(new InputStreamReader(RTin));
+
         } catch (Exception e) {
             System.out.println("Error in connection:" + e.getMessage());
         }
@@ -57,8 +61,14 @@ public class Connection extends Thread {
             METHOD = dataIn.readUTF();
             System.err.println("METHOD: " + METHOD);
             switch (METHOD) {
-                case "PT":
-                    Method_PT();
+                case "PT_Uplink":
+                    Method_PT_Uplink();
+                    break;
+                case "PT_Downlink":
+                    Method_PT_Downlink();
+                    break;
+                case "PT_Report":
+                    Method_PT_Report();
                     break;
                 case "MV_Uplink":
                     isThreadMethod = true;
@@ -105,28 +115,56 @@ public class Connection extends Thread {
     }
 
     private void uplink_Client_snd() {
+        int counter = 0;
+        long beforeTime = 0;
+        long afterTime = 0;
+        double diffTime = 0;
         try {
-            int num_blocks = Constants.NUMBER_BLOCKS;
-            byte[] snd_buf = new byte[Constants.BLOCKSIZE];
+            System.out.println("uplink_Client_snd STARTED!");
 
-            dataOut.writeInt(num_blocks);
-            dataOut.flush();
-            System.out.println("\n uplink_Client_snd with " + "Number Blocks=" + num_blocks);
-            for (int i = 0; i < num_blocks; i++) {
-                RTout.write(snd_buf);
-                RTout.writeTimeVector.add(System.currentTimeMillis());
+            byte[] payload = new byte[Constants.PACKETSIZE_UPLINK];
+            Random rand = new Random();
+            // Randomize the payload with chars between 'a' to 'z' and 'A' to 'Z'  to assure there is no "\r\n"
+            for (int i = 0; i < payload.length; i++) {
+                payload[i] = (byte) ('A' + rand.nextInt(52));
             }
-        } catch (IOException ex) {
+            //Send Packet Train
+            while (counter < Constants.NUMBER_PACKETS) {
+                // start recording the first packet send time
+                if (beforeTime == 0) {
+                    beforeTime = System.currentTimeMillis();
+                }
+                // send packet with constant gap
+                outCtrl.println(new String(payload));
+                outCtrl.flush();
+
+                // create train gap
+                try {
+                    if (Constants.PACKET_GAP > 0) {
+                        LockSupport.parkNanos(10);
+                        //Thread.sleep(Constants.PACKET_GAP);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                counter++;
+            }
+            afterTime = System.currentTimeMillis();
+            diffTime = afterTime - beforeTime;
+            outCtrl.println("END:" + diffTime);
+            outCtrl.flush();
+        } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
-            System.err.println("uplink_DONE");
+            System.err.println("uplink_Client_snd DONE");
         }
     }
 
     private boolean uplink_Client_sndInSeconds() {
         boolean keepRunning = true;
         try {
-            byte[] snd_buf = new byte[Constants.BLOCKSIZE];
+            byte[] snd_buf = new byte[Constants.BUFFERSIZE];
+            new Random().nextBytes(snd_buf);
             while (keepRunning) {
                 RTout.write(snd_buf);
             }
@@ -140,7 +178,7 @@ public class Connection extends Thread {
 
     private boolean downlink_Client_rcvInSeconds(long _end) {
         try {
-            byte[] rcv_buf = new byte[Constants.BLOCKSIZE];
+            byte[] rcv_buf = new byte[Constants.BUFFERSIZE];
             int n = 0;
             System.out.println("\n downlink_Client_rcvInSeconds");
             //Initialize Timer
@@ -148,33 +186,24 @@ public class Connection extends Thread {
                 reminderClient = new ReminderClient(1, this.dataMeasurement, this.RTin);
             }
             while (System.currentTimeMillis() < _end) {
-
                 byteCnt = 0;
                 //Cycle to read each block
                 do {
-                    n = RTin.read(rcv_buf, byteCnt, Constants.BLOCKSIZE - byteCnt);
+                    n = RTin.read(rcv_buf, byteCnt, Constants.BUFFERSIZE - byteCnt);
 
                     if (n > 0) {
                         byteCnt += n;
                         if (!isThreadMethod) {
-                            dataMeasurement.add_SampleReadTime(byteCnt, System.currentTimeMillis());
+                            dataMeasurement.add_SampleReadTime(n, System.currentTimeMillis());
                         }
                     } else {
                         System.err.println("Read n<0");
                         break;
                     }
 
-                    if (byteCnt < Constants.BLOCKSIZE) {
-                        //System.out.println("Read " + n + " bytes");
-                        //Keep reading MTU
-                    } else {
-                        //MTU is finished
-                        break;
-                    }
+                } while ((n > 0) && (byteCnt < Constants.BUFFERSIZE));
 
-                } while ((n > 0) && (byteCnt < Constants.BLOCKSIZE));
-
-                if (n < 0) {
+                if (n == -1) {
                     System.out.println("Exited with n=-1");
                     break;
                 }
@@ -189,66 +218,69 @@ public class Connection extends Thread {
         }
     }
 
-    private void downlink_Client_rcv() {
+    private double downlink_Client_rcv() {
+        int num_packets = 0;
+        String inputLine = "";
+        int counter = 0;
+        int singlePktSize = 0;
+        long startTime = 0;
+        long endTime = 0;
+        double gapTimeSrv = 0.0;
+        double gapTimeClt = 0.0;
+        double byteCounter = 0.0;
+        double estTotalDownBandWidth = 0.0;
+        double estAvailiableDownBandWidth = 0.0;
+        double availableBWFraction = 1.0;
         try {
-            byte[] rcv_buf = new byte[Constants.BLOCKSIZE];
-            int num_blocks = 0, n = 0;
-            boolean isFirstPacket = true;
-            num_blocks = dataIn.readInt();
-            System.out.println("\n downlink_Client_rcv with " + "Number Blocks=" + num_blocks);
-            for (int i = 0; i < num_blocks; i++) {
-                byteCnt = 0;
-                //Cycle to read each block
-                do {
-                    n = RTin.read(rcv_buf, byteCnt, Constants.BLOCKSIZE - byteCnt);
+            System.out.println("downlink_Client_rcv STARTED!");
+            //Receive Packet Train
+            while ((inputLine = inCtrl.readLine()) != null) {
+                if (startTime == 0) {
+                    startTime = System.currentTimeMillis();
+                    singlePktSize = inputLine.length();
+                }
 
-                    if (n > 0) {
-                        byteCnt += n;
-                        if (byteCnt >= 1460 && isFirstPacket) {
-                            firstPacket = System.currentTimeMillis();
-                            isFirstPacket = false;
-                        }
-                    }
+                byteCounter += inputLine.length();
 
-                    if (byteCnt < Constants.BLOCKSIZE) {
-                        //Keep reading MTU
-                    } else {
-                        RTin.readTimeVector.add(System.currentTimeMillis());
-                        break;
-                    }
-                } while ((n > 0) && (byteCnt < Constants.BLOCKSIZE));
-                lastPacket = System.currentTimeMillis();
-                if (n == -1) {
-                    System.out.println("Exited with n=-1");
+                System.out.println("Received the " + (counter) + " message with size: " + inputLine.length());
+                // increase the counter which is equal to the number of packets
+                counter++;
+                //read "END" msg
+                if (inputLine.substring(0, Constants.FINAL_MSG.length()).equals(Constants.FINAL_MSG)) {
+                    gapTimeClt = Double.parseDouble(inputLine.substring(Constants.FINAL_MSG.length() + 1));
+                    System.out.println("Detect last downlink link message with GAP=" + gapTimeClt);
                     break;
                 }
             }
+            endTime = System.currentTimeMillis();
+
         } catch (IOException ex) {
             ex.printStackTrace();
+        } finally {
+            gapTimeSrv = endTime - startTime;
+            // Bandwidth calculation
+            // 1 Mbit/s = 125 Byte/ms 
+            estTotalDownBandWidth = byteCounter / gapTimeSrv / 125.0;
+            availableBWFraction = Math.min(gapTimeClt / gapTimeSrv, 1.0);
+            estAvailiableDownBandWidth = estTotalDownBandWidth / availableBWFraction;
+
+            // Display information at the server side
+            System.out.println("Receive single Pkt size is " + singlePktSize + " Bytes.");
+            System.out.println("Total receiving " + counter + " packets.");
+            System.out.println("Client gap time is " + gapTimeClt + " ms.");
+            System.out.println("Total package received " + byteCounter + " Bytes with " + gapTimeSrv + " ms total GAP.");
+            System.out.println("Estimated Total download bandwidth is " + estTotalDownBandWidth + " Mbits/sec.");
+            System.out.println("Availabe fraction is " + availableBWFraction);
+            System.out.println("Estimated Available download bandwidth is " + estAvailiableDownBandWidth + " Mbits/sec.");
+            System.err.println("downlink_Client_rcv DONE!");
         }
+        return estAvailiableDownBandWidth;
     }
 
-    private int PacketTrain() {
-        Double AvaBW = null;
-        double deltaN = lastPacket - firstPacket;
-        int N = Constants.SOCKET_RCVBUF / 1460;
-        int L = Constants.BLOCKSIZE;
-        AvaBW = (((N - 1) * L) / deltaN) * 8;
-        System.out.println("AvaBW: " + AvaBW);
-        return AvaBW.intValue();
-    }
-
-    private void Method_PT() {
-        //Parameters
-        Constants.SOCKET_RCVBUF = 146000;
-        Constants.SOCKET_SNDBUF = 146000;
-        Constants.BLOCKSIZE = 146000;
-        Constants.NUMBER_BLOCKS = 1;
-
+    private void Method_PT_Uplink() {
         //Measurements
-        //reminderClient.start();
         try {
-            //Uplink
+            //Uplink App
             dataIn.readByte();
             for (int p = 0; p < 10; p++) {
                 dataIn.readByte();
@@ -256,28 +288,65 @@ public class Connection extends Thread {
                 FirstFragment.progressBar.incrementProgressBy(10);
             }
             FirstFragment.progressBar.setProgress(0);
-            FirstFragment.progressBar.setRotation(180);
-            //Downlink
-            AvailableBW.clear();
-            dataIn.readByte();
-            for (int p = 0; p < 10; p++) {
-                dataOut.writeByte(2);
-                downlink_Client_rcv();
-                FirstFragment.progressBar.incrementProgressBy(10);
-                AvailableBW.add(PacketTrain());
-            }
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
-            FirstFragment.progressBar.setProgress(0);
+            try {
+                //Create new ClientThread for Downlink
+                s_down = new Socket(Constants.SERVER_IP, Constants.SERVERPORT);
+                TCP_param = new TCP_Properties(s_down, isNagleDisable);
+                dataOut = new DataOutputStream(s_down.getOutputStream());
+                dataOut.writeInt(this.ID);
+                Thread c = new Connection(this.ID, s_down, this.dataMeasurement, isNagleDisable);
+                c.start();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
+
+    }
+
+    private void Method_PT_Downlink() {
+        //Measurements
+        try {
+            //Downlink App
+            FirstFragment.progressBar.setRotation(180);
+            dataMeasurement.AvailableBW_Down.clear();
+            dataIn.readByte();
+            for (int p = 0; p < 10; p++) {
+                dataOut.writeByte(2);
+                double BW = downlink_Client_rcv();
+                dataMeasurement.AvailableBW_Down.add(BW);
+                FirstFragment.progressBar.incrementProgressBy(10);
+            }
+            FirstFragment.progressBar.setRotation(0);
+            FirstFragment.progressBar.setProgress(0);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                //Create new ClientThread for Report
+                s_report = new Socket(Constants.SERVER_IP, Constants.SERVERPORT);
+                TCP_param = new TCP_Properties(s_report, isNagleDisable);
+                dataOut = new DataOutputStream(s_report.getOutputStream());
+                dataOut.writeInt(this.ID);
+                Thread c = new Connection(this.ID, s_report, this.dataMeasurement, isNagleDisable);
+                c.start();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+    }
+
+    private void Method_PT_Report() {
         //Report Measurements - AvailableBW_down Vector
         try {
             //Report AvailableBW_down 
             dataOut.writeByte(2);
-            dataOut.writeInt(AvailableBW.size());
-            for (int k = 0; k < AvailableBW.size(); k++) {
-                dataOut.writeInt(AvailableBW.get(k));
+            dataOut.writeInt(dataMeasurement.AvailableBW_Down.size());
+            for (int k = 0; k < dataMeasurement.AvailableBW_Down.size(); k++) {
+                dataOut.writeDouble(dataMeasurement.AvailableBW_Down.get(k));
                 dataOut.flush();
             }
             //Report Shell Vector from terminal Uplink
@@ -295,30 +364,18 @@ public class Connection extends Thread {
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
-            //reminderClient.cancelTimer();
             System.err.println("Method_PT along with report is done!");
         }
-
     }
 
     private void Method_MV_Uplink_Client() throws InterruptedException {
-        //Parameters
-        if (isIperfSettings) {
-            Constants.SOCKET_RCVBUF = 64000;
-            Constants.SOCKET_SNDBUF = 64000;
-            Constants.BLOCKSIZE = 8000;
-        } else {
-            Constants.SOCKET_RCVBUF = 14600;
-            Constants.SOCKET_SNDBUF = 14600;
-            Constants.BLOCKSIZE = 1460;
-        }
-
         //Measurements
         dataMeasurement.ByteSecondShell_up.clear();
         try {
             //Uplink
             dataIn.readByte();
             uplink_Client_sndInSeconds();
+
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
@@ -328,7 +385,7 @@ public class Connection extends Thread {
                 TCP_param = new TCP_Properties(s_down, isNagleDisable);
                 dataOut = new DataOutputStream(s_down.getOutputStream());
                 dataOut.writeInt(this.ID);
-                Thread c = new Connection(this.ID, s_down, this.dataMeasurement, isIperfSettings, isNagleDisable);
+                Thread c = new Connection(this.ID, s_down, this.dataMeasurement, isNagleDisable);
                 c.start();
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -338,17 +395,6 @@ public class Connection extends Thread {
     }
 
     private void Method_MV_Downlink_Client() throws InterruptedException {
-        //Parameters
-        if (isIperfSettings) {
-            Constants.SOCKET_RCVBUF = 64000;
-            Constants.SOCKET_SNDBUF = 64000;
-            Constants.BLOCKSIZE = 8000;
-        } else {
-            Constants.SOCKET_RCVBUF = 14600;
-            Constants.SOCKET_SNDBUF = 14600;
-            Constants.BLOCKSIZE = 1460;
-        }
-
         //Measurements
         dataMeasurement.SampleSecond_down.clear();
         dataMeasurement.ByteSecondShell_down.clear();
@@ -366,7 +412,7 @@ public class Connection extends Thread {
                 TCP_param = new TCP_Properties(s_report, isNagleDisable);
                 dataOut = new DataOutputStream(s_report.getOutputStream());
                 dataOut.writeInt(this.ID);
-                Thread c = new Connection(this.ID, s_report, this.dataMeasurement, isIperfSettings, isNagleDisable);
+                Thread c = new Connection(this.ID, s_report, this.dataMeasurement, isNagleDisable);
                 c.start();
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -404,22 +450,12 @@ public class Connection extends Thread {
     }
 
     private void Method_MV_UP_readVector_Client() throws InterruptedException {
-        //Parameters
-        if (isIperfSettings) {
-            Constants.SOCKET_RCVBUF = 64000;
-            Constants.SOCKET_SNDBUF = 64000;
-            Constants.BLOCKSIZE = 8000;
-        } else {
-            Constants.SOCKET_RCVBUF = 14600;
-            Constants.SOCKET_SNDBUF = 14600;
-            Constants.BLOCKSIZE = 1460;
-        }
-
         //Measurements
         try {
             //Uplink
             dataIn.readByte();
             uplink_Client_sndInSeconds();
+
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
@@ -429,7 +465,7 @@ public class Connection extends Thread {
                 TCP_param = new TCP_Properties(s_down, isNagleDisable);
                 dataOut = new DataOutputStream(s_down.getOutputStream());
                 dataOut.writeInt(this.ID);
-                Thread c = new Connection(this.ID, s_down, this.dataMeasurement, isIperfSettings, isNagleDisable);
+                Thread c = new Connection(this.ID, s_down, this.dataMeasurement, isNagleDisable);
                 c.start();
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -438,17 +474,6 @@ public class Connection extends Thread {
     }
 
     private void Method_MV_DOWN_readVector_Client() throws InterruptedException {
-        //Parameters
-        if (isIperfSettings) {
-            Constants.SOCKET_RCVBUF = 64000;
-            Constants.SOCKET_SNDBUF = 64000;
-            Constants.BLOCKSIZE = 8000;
-        } else {
-            Constants.SOCKET_RCVBUF = 14600;
-            Constants.SOCKET_SNDBUF = 14600;
-            Constants.BLOCKSIZE = 1460;
-        }
-
         //Measurements
         dataMeasurement.SampleReadTime.clear();
         try {
@@ -456,6 +481,7 @@ public class Connection extends Thread {
             dataIn.readByte();
             long end = System.currentTimeMillis() + runningTime;
             downlink_Client_rcvInSeconds(end);
+
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
@@ -465,7 +491,7 @@ public class Connection extends Thread {
                 TCP_param = new TCP_Properties(s_report, isNagleDisable);
                 dataOut = new DataOutputStream(s_report.getOutputStream());
                 dataOut.writeInt(this.ID);
-                Thread c = new Connection(this.ID, s_report, this.dataMeasurement, isIperfSettings, isNagleDisable);
+                Thread c = new Connection(this.ID, s_report, this.dataMeasurement, isNagleDisable);
                 c.start();
             } catch (IOException ex) {
                 ex.printStackTrace();

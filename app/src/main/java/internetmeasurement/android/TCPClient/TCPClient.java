@@ -16,13 +16,11 @@ public class TCPClient extends AsyncTask {
     private TCP_Properties TCP_param = null;
     private DataMeasurement dataMeasurement = null;
     private int ID = 0;
-    private boolean isIperfSettings;
     public boolean isNagleDisable;
 
-    public TCPClient(boolean _isIperfSettings, boolean _isNagleDisable) {
+    public TCPClient(boolean _isNagleDisable) {
 
         try {
-            this.isIperfSettings = _isIperfSettings;
             this.isNagleDisable = _isNagleDisable;
 
         } catch (Exception ex) {
@@ -56,18 +54,20 @@ public class TCPClient extends AsyncTask {
             //Receive Client ID from Server
             DataInputStream dis = new DataInputStream(s_up.getInputStream());
             ID = dis.readInt();
-            dos.writeBoolean(isIperfSettings);
-            dos.flush();
             dos.writeBoolean(isNagleDisable);
             dos.flush();
-            dos.writeInt(Constants.BLOCKSIZE);
+            dos.writeInt(Constants.NUMBER_PACKETS);
+            dos.flush();
+            dos.writeInt(Constants.PACKETSIZE_DOWNLINK);
+            dos.flush();
+            dos.writeInt(Constants.BUFFERSIZE);
             dos.flush();
             dos.writeInt(Constants.SOCKET_RCVBUF);
             dos.flush();
             dos.writeInt(Constants.SOCKET_SNDBUF);
             dos.flush();
-            System.err.println("isIperfSettings: " + isIperfSettings + "  " + "isNagleDisable" + isNagleDisable);
-            connection = new Connection(ID, s_up, dataMeasurement, isIperfSettings, isNagleDisable);
+            System.err.println("isNagleDisable: " + isNagleDisable);
+            connection = new Connection(ID, s_up, dataMeasurement,isNagleDisable);
             connection.start();
         } catch (Exception ex) {
             ex.printStackTrace();
