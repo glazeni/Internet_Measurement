@@ -66,6 +66,7 @@ public class SecondFragment extends Fragment {
         //textViewDate.setText(dateString);
 
         //rv.setHasFixedSize(true);
+        List.add(new Data("1","2","3","4","5"));
         MyAdapter adapter = new MyAdapter(List);
         rv.setAdapter(adapter);
 
