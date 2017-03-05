@@ -42,7 +42,6 @@ public class FirstFragment extends Fragment {
     private Button startButton;
     public static ProgressBar progressBar;
     private boolean isNagleDisable;
-    public static boolean isAlgorithmDone = false;
     public static String pingValue=null;
 
     @Override

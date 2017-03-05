@@ -34,6 +34,7 @@ public class SecondFragment extends Fragment {
     private RecyclerView rv = null;
     private LinearLayoutManager llm = null;
     private Button resultsButton = null;
+    public static boolean isAlgorithmDone = false;
 
 
     @Override
@@ -82,7 +83,7 @@ public class SecondFragment extends Fragment {
         resultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (FirstFragment.isAlgorithmDone) {
+                if (isAlgorithmDone) {
                     String algorithm = null;
                     if(Connection.METHOD.equalsIgnoreCase("MV_Report")){
                         algorithm = "1SecThread";
@@ -98,7 +99,7 @@ public class SecondFragment extends Fragment {
                     adapter = new MyAdapter(List);
                     rv.setAdapter(adapter);
                     rv.setLayoutManager(llm);
-                    FirstFragment.isAlgorithmDone=false;
+                    isAlgorithmDone=false;
                     ReminderClient.average = 0;
                 }
             }

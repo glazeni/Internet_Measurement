@@ -14,6 +14,7 @@ import java.util.Random;
 import java.util.concurrent.locks.LockSupport;
 
 import internetmeasurement.android.fragment.first.FirstFragment;
+import internetmeasurement.android.fragment.second.SecondFragment;
 
 public class Connection extends Thread {
 
@@ -364,6 +365,7 @@ public class Connection extends Thread {
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
+            SecondFragment.isAlgorithmDone=true;
             System.err.println("Method_PT along with report is done!");
         }
     }
@@ -445,7 +447,7 @@ public class Connection extends Thread {
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
-            FirstFragment.isAlgorithmDone=true;
+            SecondFragment.isAlgorithmDone=true;
             System.err.println("Method_MV_Client along with Report is done!");
         }
     }
@@ -527,6 +529,7 @@ public class Connection extends Thread {
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
+            SecondFragment.isAlgorithmDone=true;
             System.err.println("Method_MV_readVector_Client along with Report is done!");
         }
     }
