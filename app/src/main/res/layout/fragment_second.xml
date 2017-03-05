@@ -6,40 +6,39 @@
     android:layout_height="match_parent"
     tools:context=".fragment.second.SecondFragment">
 
-        <!--GRAPH VIEW LABELS AND CAPTIONS-->
-        <com.jjoe64.graphview.GraphView
-            android:id="@+id/graph"
-            android:layout_width="320dp"
-            android:layout_height="200dp"
-            android:layout_alignRight="@+id/results_container"
-            android:layout_gravity="center|top"
-            android:layout_marginTop="50dp"/>
+    <!--GRAPH VIEW LABELS AND CAPTIONS-->
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/graph"
+        android:layout_width="320dp"
+        android:layout_height="200dp"
+        android:layout_alignRight="@+id/results_container"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="50dp"/>
 
-        <TextView
-            android:id="@+id/graph_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:gravity="center"
-            android:text="Bandwidth Estimation"
-            android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/graph_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="Bandwidth Estimation"
+        android:textSize="20sp"/>
 
-        <TextView
-            android:id="@+id/graph_X_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="250dp"
-            android:gravity="center"
-            android:text="Time[s]"/>
+    <TextView
+        android:id="@+id/graph_X_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="250dp"
+        android:gravity="center"
+        android:text="Time[s]"/>
 
-        <TextView
-            android:id="@+id/graph_Y_label"
-            android:layout_width="110dp"
-            android:layout_height="110dp"
-            android:layout_marginTop="90dp"
-            android:text="Bandwidth[Mbits]"
-            android:rotation="-90"/>
-
+    <TextView
+        android:id="@+id/graph_Y_label"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="90dp"
+        android:rotation="-90"
+        android:text="Bandwidth[Mbits]"/>
 
     <!-- BAR RESULT VIEW -->
     <LinearLayout
@@ -147,11 +146,17 @@
         </TableLayout>
     </LinearLayout>
 
+    <Button
+        android:id="@+id/results_button"
+        android:layout_below="@id/results_container"
+        android:background="@android:color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/results_container"/>
-
 </RelativeLayout>

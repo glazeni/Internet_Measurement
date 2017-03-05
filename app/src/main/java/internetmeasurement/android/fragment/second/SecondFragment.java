@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
@@ -20,13 +21,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import internetmeasurement.android.R;
+import internetmeasurement.android.TCPClient.Connection;
+import internetmeasurement.android.TCPClient.ReminderClient;
+import internetmeasurement.android.fragment.first.FirstFragment;
 
 
 public class SecondFragment extends Fragment {
     public static LineGraphSeries<DataPoint> series = null;
-    private static List<Data> List = new ArrayList<>();
-    public static GraphView graph = null;
-    private static RecyclerView rv = null;
+    private List<Data> List = new ArrayList<>();
+    private GraphView graph = null;
+    private MyAdapter adapter = null;
+    private RecyclerView rv = null;
+    private LinearLayoutManager llm = null;
+    private Button resultsButton = null;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,8 +42,10 @@ public class SecondFragment extends Fragment {
 
         //Inflate View
         View secondView = inflater.inflate(R.layout.fragment_second, container, false);
-        //Recycler View
+        //Recycler View & LayoutManager
         rv = (RecyclerView) secondView.findViewById(R.id.recycler_view);
+        llm = new LinearLayoutManager(getContext());
+
 
         //Data Points Series
         series = new LineGraphSeries<>();
@@ -61,17 +71,39 @@ public class SecondFragment extends Fragment {
         //Get Date
         //TextView textViewDate = (TextView) secondView.findViewById(R.id.date_info);
         long date = System.currentTimeMillis();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, \n yyyy \n h:mm a");
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM d HH:mm:ss");
         String dateString = sdf.format(date);
-        //textViewDate.setText(dateString);
 
         //rv.setHasFixedSize(true);
-        List.add(new Data("1","2","3","4","5"));
-        MyAdapter adapter = new MyAdapter(List);
-        rv.setAdapter(adapter);
 
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
-        rv.setLayoutManager(llm);
+        //adapter= new MyAdapter(List);
+        //rv.setAdapter(adapter);
+        resultsButton = (Button) secondView.findViewById(R.id.results_button);
+        resultsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (FirstFragment.isAlgorithmDone) {
+                    String algorithm = null;
+                    if(Connection.METHOD.equalsIgnoreCase("MV_Report")){
+                        algorithm = "1SecThread";
+                    }else if(Connection.METHOD.equalsIgnoreCase("MV_Report_readVector")){
+                        algorithm = "SampleTime";
+                    }else if(Connection.METHOD.equalsIgnoreCase("PT_Report")){
+                        algorithm = "PacketTrain";
+                    }else{
+                        algorithm = "None";
+                    }
+                    List.add(new Data(FirstFragment.mSpinner1.getSelectedItem().toString()+" ", algorithm+" ", dateString+" ",
+                            String.valueOf(Math.round(ReminderClient.average/35)*100/100.0)+" ", FirstFragment.pingValue));
+                    adapter = new MyAdapter(List);
+                    rv.setAdapter(adapter);
+                    rv.setLayoutManager(llm);
+                    FirstFragment.isAlgorithmDone=false;
+                    ReminderClient.average = 0;
+                }
+            }
+        });
+
 
         return secondView;
     }

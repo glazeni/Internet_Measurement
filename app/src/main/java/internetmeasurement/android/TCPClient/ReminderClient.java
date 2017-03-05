@@ -20,6 +20,7 @@ import internetmeasurement.android.fragment.second.SecondFragment;
 public class ReminderClient extends Thread {
 
     private Timer timer = null;
+    public static double average=0;
     private DataMeasurement dataMeasurement = null;
     private RTInputStream RTin = null;
     private int i = 0;
@@ -56,6 +57,7 @@ public class ReminderClient extends Thread {
                     SecondFragment.series.appendData(new DataPoint(count.get(), 0), true, 40);
                 } else {
                     SecondFragment.series.appendData(new DataPoint(count.incrementAndGet(), RTin.getBitsConversion()), true, 40);
+                    average+=RTin.getBitsConversion();
                 }
                 RTin.clearBytes();
                 i++;

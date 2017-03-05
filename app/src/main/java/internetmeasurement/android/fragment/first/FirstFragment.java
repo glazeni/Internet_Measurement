@@ -12,7 +12,6 @@ import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,13 +36,14 @@ import internetmeasurement.android.TCPClient.TCPClient;
  * A simple {@link Fragment} subclass.
  */
 public class FirstFragment extends Fragment {
-    protected Spinner mSpinner1 = null;
+    public static Spinner mSpinner1 = null;
     protected ArrayAdapter<String> mAdapter1 = null;
     private int mIndex1 = 0;
-
     private Button startButton;
     public static ProgressBar progressBar;
     private boolean isNagleDisable;
+    public static boolean isAlgorithmDone = false;
+    public static String pingValue=null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,18 +88,24 @@ public class FirstFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TCPClient tcpClient = new TCPClient(isNagleDisable);
-                tcpClient.execute();
-                Toast.makeText(getContext(), "Measurement Test Started!", Toast.LENGTH_SHORT).show();
-                //RunTCPClient runTCPClient = new RunTCPClient();
-                //runTCPClient.execute();
-                pingCommand("ping -c 1 -w 1 google.com", false);
+                if (mSpinner1.getSelectedItemPosition() == 0) {
+                    Toast.makeText(getContext(), "Please Select a Connection Type", Toast.LENGTH_SHORT).show();
+                }else {
+                    //Test
+                    Toast.makeText(getContext(), "Measurement Test Started!", Toast.LENGTH_SHORT).show();
+                    TCPClient tcpClient = new TCPClient(isNagleDisable);
+                    tcpClient.execute();
+
+                    //Ping
+                    pingValue = pingCommand("ping -c 1 -w 1 google.com", false);
+//                RunTCPClient runTCPClient = new RunTCPClient();
+//                runTCPClient.execute();
+                }
             }
         });
 
         //Spinner String List
         String[] values = new String[]{"None", "Wi-Fi", "3G", "4G"};
-        String[] algorithms = new String[]{"Uplink", "Downlink"};
 
 
         /********************************         SPINNER 1 DEFINITION     ***************************************/
@@ -113,7 +119,7 @@ public class FirstFragment extends Fragment {
                 //Typeface typeFace_item = Typeface.createFromAsset(getContext().getAssets(), "fonts/Eurosti.ttf");
                 //tv.setTypeface(typeFace_item);
                 if (position == mSpinner1.getSelectedItemPosition()) {
-                    Log.d("SPINNER1",mSpinner1.getSelectedItem().toString());
+                    //Log.d("SPINNER1", mSpinner1.getSelectedItem().toString());
                     // Set the hint text color gray
                     tv.setTextColor(Color.GRAY);
                 } else {
@@ -268,13 +274,18 @@ public class FirstFragment extends Fragment {
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
             String s;
+            String part1=null;
+            String[] parts=null;
             String res = "";
             while ((s = stdInput.readLine()) != null) {
-                res += s + "\n";
+                part1 = s.replaceAll("\\s+", "");
+                if(part1.contains("time=")){
+                    parts = part1.split("time=");
+                    break;
+                }
             }
-            Log.d("PING", res);
             p.destroy();
-            return res;
+            return parts != null ? parts[1] : null;
         } catch (Exception e) {
             e.printStackTrace();
         }

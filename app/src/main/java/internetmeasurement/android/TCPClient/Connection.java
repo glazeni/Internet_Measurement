@@ -31,7 +31,7 @@ public class Connection extends Thread {
     private ReminderClient reminderClient = null;
     private int byteCnt = 0;
     private boolean isThreadMethod;
-    private String METHOD = null;
+    public static String METHOD = null;
     private TCP_Properties TCP_param = null;
     public static long runningTime = 5000;
     private int ID = 0;
@@ -445,6 +445,7 @@ public class Connection extends Thread {
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
+            FirstFragment.isAlgorithmDone=true;
             System.err.println("Method_MV_Client along with Report is done!");
         }
     }
