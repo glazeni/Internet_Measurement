@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +41,7 @@ public class FirstFragment extends Fragment {
     private Button startButton;
     public static ProgressBar progressBar;
     private boolean isNagleDisable;
-    public static String pingValue=null;
+    public static String pingValue = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,8 +70,7 @@ public class FirstFragment extends Fragment {
         final WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
         //Network manager
         final ConnectivityManager connectManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        //Telephony manager
-        final TelephonyManager telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+
 
         //Custom Font to SpinnerTitle
         //TextView spinner1_title = (TextView) firstView.findViewById(R.id.spinner_text_1);
@@ -87,24 +85,28 @@ public class FirstFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSpinner1.getSelectedItemPosition() == 0) {
-                    Toast.makeText(getContext(), "Please Select a Connection Type", Toast.LENGTH_SHORT).show();
-                }else {
-                    //Test
-                    Toast.makeText(getContext(), "Measurement Test Started!", Toast.LENGTH_SHORT).show();
-                    TCPClient tcpClient = new TCPClient(isNagleDisable);
-                    tcpClient.execute();
+                if (connectManager.getActiveNetworkInfo()!=null && connectManager.getActiveNetworkInfo().isAvailable()) {
+                    if (mSpinner1.getSelectedItemPosition() == 0) {
+                        Toast.makeText(getContext(), "Please Select a Connection Type", Toast.LENGTH_SHORT).show();
+                    } else {
+                        //Test
+                        Toast.makeText(getContext(), "Measurement Test Started!", Toast.LENGTH_LONG).show();
+                        TCPClient tcpClient = new TCPClient(isNagleDisable);
+                        tcpClient.execute();
 
-                    //Ping
-                    pingValue = pingCommand("ping -c 1 -w 1 google.com", false);
+                        //Ping
+                        pingValue = pingCommand("ping -c 1 -w 1 google.com", false);
 //                RunTCPClient runTCPClient = new RunTCPClient();
 //                runTCPClient.execute();
+                    }
+                }else{
+                    Toast.makeText(getContext(), "Network is Unavailable", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         //Spinner String List
-        String[] values = new String[]{"None", "Wi-Fi", "3G", "4G"};
+        String[] values = new String[]{"None", "Wi-Fi", "3G/4G"};
 
 
         /********************************         SPINNER 1 DEFINITION     ***************************************/
@@ -166,34 +168,8 @@ public class FirstFragment extends Fragment {
                                 }).create().show();
                     }
                 }
-                //3G Selected
+                //3G/4G Selected
                 if (position == 2) {
-                    if (wifiManager.isWifiEnabled()) {
-                        new AlertDialog.Builder(getContext())
-                                .setTitle("You need to turn off Wi-Fi to perform Cellular measurement")
-                                .setMessage("Do you want to turn it off?")
-                                .setNegativeButton(android.R.string.no, null)
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface arg0, int arg1) {
-                                        startActivityForResult(new Intent(Settings.ACTION_SETTINGS), 0);
-
-                                    }
-                                }).create().show();
-                    } else if (connectManager.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED) {
-                        new AlertDialog.Builder(getContext())
-                                .setTitle("Mobile Data is needed to perform operation")
-                                .setMessage("Do you want to turn it on?")
-                                .setNegativeButton(android.R.string.no, null)
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface arg0, int arg1) {
-                                        startActivityForResult(new Intent(Settings.ACTION_SETTINGS), 0);
-
-                                    }
-                                }).create().show();
-                    }
-                }
-                //4G Selected
-                if (position == 3) {
                     if (wifiManager.isWifiEnabled()) {
                         new AlertDialog.Builder(getContext())
                                 .setTitle("You need to turn off Wi-Fi to perform Cellular measurement")
@@ -273,12 +249,12 @@ public class FirstFragment extends Fragment {
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
             String s;
-            String part1=null;
-            String[] parts=null;
+            String part1 = null;
+            String[] parts = null;
             String res = "";
             while ((s = stdInput.readLine()) != null) {
                 part1 = s.replaceAll("\\s+", "");
-                if(part1.contains("time=")){
+                if (part1.contains("time=")) {
                     parts = part1.split("time=");
                     break;
                 }
@@ -298,6 +274,7 @@ public class FirstFragment extends Fragment {
             public void run() {
                 try {
                     progressBar.setProgress(0);
+                    progressBar.setRotation(0);
                     long end = System.currentTimeMillis() + Connection.runningTime;
                     long start = System.currentTimeMillis();
                     while (System.currentTimeMillis() < end) {

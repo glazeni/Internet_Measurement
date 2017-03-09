@@ -61,7 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/mtu_bar_up"
         android:layout_marginTop="10dp"
-        android:text="Packet Size Downlink: 1024 bytes "
+        android:text="Packet Size Downlink: 1460 bytes "
         android:textSize="20sp"/>
 
 
@@ -137,7 +137,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/socket_snd_bar"
         android:layout_marginTop="10dp"
-        android:text="Socket Timeout: 30000 ms"
+        android:text="Socket Timeout: 100000 ms"
         android:textSize="20sp"/>
 
     <SeekBar
@@ -145,7 +145,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/socket_timeout"
-        android:max="60000"
+        android:max="100000"
         android:thumbOffset="0dp"/>
 
 </RelativeLayout>

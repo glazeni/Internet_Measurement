@@ -34,43 +34,88 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         //Constructor needs to be called after request window!
         super.onCreate(savedInstanceState);
 
-        //Set view
-        setContentView(R.layout.activity_main);
+//        RelativeLayout rl = (RelativeLayout) findViewById(R.id.container_main);
+//        Bitmap bitmapFactory = BitmapFactory.decodeResource(getResources(), R.drawable.background);
 
-        //TabLayout
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+//        setContentView(R.layout.activity_main);
+//        RelativeLayout rl = (RelativeLayout)findViewById(R.id.container_main);
 
-        //Initializing View Pager
-        //viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager = (CustomViewPager) findViewById(R.id.viewpager);
+//        Bitmap background = decodeSampledBitmapFromResource(getApplicationContext().getResources(), R.drawable.background, 3240, 4096);
+//        BitmapDrawable background_ = new BitmapDrawable(background);
+//        rl.setBackgroundDrawable(background_);
 
-        //Creating PagerAdapter
-        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), 4);
-
-        //Adding adapter to pager
-        viewPager.setAdapter(adapter);
-
-        //Wiring tabLayout with Viewpager
-        tabLayout.setupWithViewPager(viewPager);
-
-        //Adding onTabSelectedListener to swipe views
-        tabLayout.setOnTabSelectedListener(this);
+//        Bitmap background = decodeSampledBitmapFromResource(getApplicationContext().getResources(), R.drawable.background, 3240, 4096);
+//        BitmapDrawable drawable = new BitmapDrawable(getApplicationContext().getResources(),background);
+//        ImageView imageView = (ImageView) findViewById(R.id.image_view);
+//        imageView.setBackground(drawable);
 
 
-        //Customization tabs within tabLayout
-        setupTabViews();
+//      //Set Background Image
+//        RelativeLayout rl=(RelativeLayout) findViewById(R.id.container_main);
+//        Bitmap myImage = BitmapFactory.decodeResource(getResources(), R.drawable.background);
+//        Drawable dr = new BitmapDrawable(myImage);
+//        rl.setBackgroundDrawable(dr);
 
-        //Disable ViewPager Horizontal Scroll/Swipe
+//        //Set view
+//        setContentView(R.layout.activity_main);
+//
+//        //TabLayout
+//        tabLayout = (TabLayout) findViewById(R.id.tabs);
+//
+//        //Initializing View Pager
+//        viewPager = (CustomViewPager) findViewById(R.id.viewpager);
+//
+//        //Creating PagerAdapter
+//        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), 4);
+//
+//        //Adding adapter to pager
+//        viewPager.setAdapter(adapter);
+//
+//        //Wiring tabLayout with Viewpager
+//        tabLayout.setupWithViewPager(viewPager);
+//
+//        //Adding onTabSelectedListener to swipe views
+//        tabLayout.setOnTabSelectedListener(this);
+//
+//
+//        //Customization tabs within tabLayout
+//        setupTabViews();
+
 
         this.runOnUiThread(new Runnable() {
             public void run() {
+
+                //Set view
+                setContentView(R.layout.activity_main);
+
+                //TabLayout
+                tabLayout = (TabLayout) findViewById(R.id.tabs);
+
+                //Initializing View Pager
+                viewPager = (CustomViewPager) findViewById(R.id.viewpager);
+
+                //Creating PagerAdapter
+                PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), 4);
+
+                //Adding adapter to pager
+                viewPager.setAdapter(adapter);
+
+                //Wiring tabLayout with Viewpager
+                tabLayout.setupWithViewPager(viewPager);
+
+                //Adding onTabSelectedListener to swipe views
+                //tabLayout.setOnTabSelectedListener(this);
+
+
+                //Customization tabs within tabLayout
+                setupTabViews();
+
+                //Disable ViewPager Horizontal Scroll/Swipe
                 viewPager.setSwipeable(false);
                 //Request Permissions
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
             }
         });
-
-
 
 
     }

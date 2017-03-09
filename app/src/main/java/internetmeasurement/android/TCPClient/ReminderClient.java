@@ -7,7 +7,6 @@ package internetmeasurement.android.TCPClient;
 
 import com.jjoe64.graphview.series.DataPoint;
 
-import java.text.SimpleDateFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,10 +19,10 @@ import internetmeasurement.android.fragment.second.SecondFragment;
 public class ReminderClient extends Thread {
 
     private Timer timer = null;
-    public static double average=0;
+    public static double average = 0;
     private DataMeasurement dataMeasurement = null;
     private RTInputStream RTin = null;
-    private int i = 0;
+    public static int i = 0;
     private static final AtomicInteger count = new AtomicInteger(0);
 
     public ReminderClient(int seconds, DataMeasurement _dataMeasurement, RTInputStream _RTin) {
@@ -31,7 +30,7 @@ public class ReminderClient extends Thread {
         this.RTin = _RTin;
         timer = new Timer();
         //timer.schedule(new RemindTask(), 0, seconds);
-        timer.scheduleAtFixedRate(new RemindTask(), 0, (seconds * 1000));
+        timer.scheduleAtFixedRate(new RemindTask(this.RTin), 0, (seconds * 1000));
 
     }
 
@@ -40,26 +39,27 @@ public class ReminderClient extends Thread {
     }
 
     class RemindTask extends TimerTask {
-        SimpleDateFormat sdf=null;
-        public RemindTask() {
-            //Do nothing in constructor
+        private RTInputStream RTinput = null;
+
+        public RemindTask(RTInputStream _RTinput) {
+            this.RTinput = _RTinput;
         }
 
         @Override
         public void run() {
             try {
                 dataMeasurement.add_SampleSecond_down(RTin.getBytes2Bits());
-                System.out.println("REMINDER CLIENT" + i + " with " + "bits=" + RTin.getBytes2Bits());
+                System.out.println("REMINDER CLIENT" + i + " with " + "bits=" + this.RTinput.getBytes2Bits());
             } catch (Exception ex) {
                 ex.printStackTrace();
             } finally {
                 if (i == 0) {
                     SecondFragment.series.appendData(new DataPoint(count.get(), 0), true, 40);
                 } else {
-                    SecondFragment.series.appendData(new DataPoint(count.incrementAndGet(), RTin.getBitsConversion()), true, 40);
-                    average+=RTin.getBitsConversion();
+                    SecondFragment.series.appendData(new DataPoint(count.incrementAndGet(), this.RTinput.getBitsConversion()), true, 40);
+                    average += this.RTinput.getBitsConversion();
                 }
-                RTin.clearBytes();
+                this.RTinput.clearBytes();
                 i++;
             }
         }

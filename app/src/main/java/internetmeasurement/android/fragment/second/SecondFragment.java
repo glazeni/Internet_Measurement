@@ -15,6 +15,7 @@ import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -76,35 +77,45 @@ public class SecondFragment extends Fragment {
         String dateString = sdf.format(date);
 
         //rv.setHasFixedSize(true);
+        adapter = new MyAdapter(List);
+        rv.setAdapter(adapter);
+        rv.setLayoutManager(llm);
 
         //adapter= new MyAdapter(List);
         //rv.setAdapter(adapter);
+
         resultsButton = (Button) secondView.findViewById(R.id.results_button);
         resultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isAlgorithmDone) {
+                    DecimalFormat df = new DecimalFormat(".##");
                     String algorithm = null;
                     if(Connection.METHOD.equalsIgnoreCase("MV_Report")){
                         algorithm = "1SecThread";
+                        List.add(new Data(FirstFragment.mSpinner1.getSelectedItem().toString()+" ", algorithm+" ", dateString+" ",
+                                String.valueOf(df.format(ReminderClient.average/ReminderClient.i))+" Mbits ", FirstFragment.pingValue));
                     }else if(Connection.METHOD.equalsIgnoreCase("MV_Report_readVector")){
-                        algorithm = "SampleTime";
+                        algorithm = "SampleReadTime";
+                        List.add(new Data(FirstFragment.mSpinner1.getSelectedItem().toString()+" ", algorithm+" ", dateString+" ",
+                                String.valueOf(df.format(ReminderClient.average/ReminderClient.i))+" Mbits ", FirstFragment.pingValue));
                     }else if(Connection.METHOD.equalsIgnoreCase("PT_Report")){
                         algorithm = "PacketTrain";
+                        List.add(new Data(FirstFragment.mSpinner1.getSelectedItem().toString()+" ", algorithm+" ", dateString+" ",
+                                String.valueOf(df.format(Connection.average/10))+" Mbits ", FirstFragment.pingValue));
                     }else{
-                        algorithm = "None";
+                        List.add(new Data("ERROR","ERROR", "ERROR", "ERROR", "ERROR"));
                     }
-                    List.add(new Data(FirstFragment.mSpinner1.getSelectedItem().toString()+" ", algorithm+" ", dateString+" ",
-                            String.valueOf(Math.round(ReminderClient.average/35)*100/100.0)+" ", FirstFragment.pingValue));
+
                     adapter = new MyAdapter(List);
                     rv.setAdapter(adapter);
                     rv.setLayoutManager(llm);
                     isAlgorithmDone=false;
+                    Connection.average=0;
                     ReminderClient.average = 0;
                 }
             }
         });
-
 
         return secondView;
     }

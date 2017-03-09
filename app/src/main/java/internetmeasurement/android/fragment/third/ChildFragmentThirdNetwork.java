@@ -7,7 +7,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +35,11 @@ public class ChildFragmentThirdNetwork extends Fragment {
 
         //Wi-Fi Manager
         wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
-        Log.d("WIFI-MANAGER", wifiManager.getConnectionInfo().toString());
+        //Log.d("WIFI-MANAGER", wifiManager.getConnectionInfo().toString());
+        //WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        //Integer linkSpeed = wifiInfo.getLinkSpeed();
+        //Toast.makeText(getContext(), linkSpeed.toString(), Toast.LENGTH_LONG).show();
+
 
         //Connectivity Manager
         connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);

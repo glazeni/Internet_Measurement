@@ -76,7 +76,7 @@ public class ChildFragmentThirdSettings extends Fragment {
         //Packet Size Downlink
         TextView tvMTUsizeDOWN = (TextView) childThird.findViewById(R.id.mtu_size_down);
         SeekBar mtuBarDOWN = (SeekBar) childThird.findViewById(R.id.mtu_bar_down);
-        mtuBarDOWN.setProgress(1024);
+        mtuBarDOWN.setProgress(1460);
         mtuBarDOWN.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
@@ -171,7 +171,7 @@ public class ChildFragmentThirdSettings extends Fragment {
         //Socket Timeout
         TextView tvSOtimeout = (TextView) childThird.findViewById(R.id.socket_timeout);
         SeekBar SOtimeoutBar = (SeekBar) childThird.findViewById(R.id.socket_timeout_bar);
-        SOtimeoutBar.setProgress(30000);
+        SOtimeoutBar.setProgress(100000);
         SOtimeoutBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

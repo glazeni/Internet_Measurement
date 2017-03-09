@@ -13,8 +13,8 @@ import java.net.Socket;
 import java.util.Random;
 import java.util.concurrent.locks.LockSupport;
 
+import Client.RunShellCommandsClient;
 import internetmeasurement.android.fragment.first.FirstFragment;
-import internetmeasurement.android.fragment.second.SecondFragment;
 
 public class Connection extends Thread {
 
@@ -30,13 +30,15 @@ public class Connection extends Thread {
 
     private DataMeasurement dataMeasurement = null;
     private ReminderClient reminderClient = null;
+    private RunShellCommandsClient runShell = null;
     private int byteCnt = 0;
     private boolean isThreadMethod;
     public static String METHOD = null;
     private TCP_Properties TCP_param = null;
-    public static long runningTime = 5000;
+    public static long runningTime = 32000;
     private int ID = 0;
     private boolean isNagleDisable;
+    public static int average=0;
 
     public Connection(int _ID, Socket _s, DataMeasurement _dataMeasurement, boolean _isNagleDisable) {
         try {
@@ -105,6 +107,7 @@ public class Connection extends Thread {
             ex.printStackTrace();
             System.err.println("Sending Data Failure:" + ex.getMessage());
         } finally {
+
             try {
                 if (s != null) {
                     s.close();
@@ -141,23 +144,21 @@ public class Connection extends Thread {
 
                 // create train gap
                 try {
-                    if (Constants.PACKET_GAP > 0) {
-                        LockSupport.parkNanos(10);
-                        //Thread.sleep(Constants.PACKET_GAP);
-                    }
+                    LockSupport.parkNanos(Constants.PACKET_GAP);
+                    //Thread.sleep(Constants.PACKET_GAP);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 counter++;
             }
-            afterTime = System.currentTimeMillis();
-            diffTime = afterTime - beforeTime;
+            //afterTime = System.currentTimeMillis();
+            diffTime = System.currentTimeMillis() - beforeTime;
             outCtrl.println("END:" + diffTime);
             outCtrl.flush();
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
-            System.err.println("uplink_Client_snd DONE");
+            System.out.println("uplink_Client_snd DONE");
         }
     }
 
@@ -166,6 +167,7 @@ public class Connection extends Thread {
         try {
             byte[] snd_buf = new byte[Constants.BUFFERSIZE];
             new Random().nextBytes(snd_buf);
+            long end = System.currentTimeMillis() + 10000;
             while (keepRunning) {
                 RTout.write(snd_buf);
             }
@@ -181,7 +183,7 @@ public class Connection extends Thread {
         try {
             byte[] rcv_buf = new byte[Constants.BUFFERSIZE];
             int n = 0;
-            System.out.println("\n downlink_Client_rcvInSeconds");
+            System.out.println("\n downlink_Client_rcvInSeconds STARTED");
             //Initialize Timer
             if (isThreadMethod) {
                 reminderClient = new ReminderClient(1, this.dataMeasurement, this.RTin);
@@ -189,21 +191,20 @@ public class Connection extends Thread {
             while (System.currentTimeMillis() < _end) {
                 byteCnt = 0;
                 //Cycle to read each block
-                do {
-                    n = RTin.read(rcv_buf, byteCnt, Constants.BUFFERSIZE - byteCnt);
+                //do {
+                n = RTin.read(rcv_buf, byteCnt, Constants.BUFFERSIZE - byteCnt);
 
-                    if (n > 0) {
-                        byteCnt += n;
-                        if (!isThreadMethod) {
-                            dataMeasurement.add_SampleReadTime(n, System.currentTimeMillis());
-                        }
-                    } else {
-                        System.err.println("Read n<0");
-                        break;
+                if (n > 0) {
+                    byteCnt += n;
+                    if (!isThreadMethod) {
+                        dataMeasurement.add_SampleReadTime(n, System.currentTimeMillis());
                     }
+                } else {
+                    System.err.println("Read n<0");
+                    break;
+                }
 
-                } while ((n > 0) && (byteCnt < Constants.BUFFERSIZE));
-
+                //} while ((n > 0) && (byteCnt < Constants.BUFFERSIZE));
                 if (n == -1) {
                     System.out.println("Exited with n=-1");
                     break;
@@ -213,6 +214,7 @@ public class Connection extends Thread {
         } catch (IOException ex) {
             return false;
         } finally {
+            System.out.println("\n downlink_Client_rcvInSeconds DONE");
             if (isThreadMethod) {
                 reminderClient.cancelTimer();
             }
@@ -260,7 +262,7 @@ public class Connection extends Thread {
         } finally {
             gapTimeSrv = endTime - startTime;
             // Bandwidth calculation
-            // 1 Mbit/s = 125 Byte/ms 
+            // 1 Mbit/s = 125 Byte/ms
             estTotalDownBandWidth = byteCounter / gapTimeSrv / 125.0;
             availableBWFraction = Math.min(gapTimeClt / gapTimeSrv, 1.0);
             estAvailiableDownBandWidth = estTotalDownBandWidth / availableBWFraction;
@@ -278,17 +280,19 @@ public class Connection extends Thread {
         return estAvailiableDownBandWidth;
     }
 
-    private void Method_PT_Uplink() {
+    private void Method_PT_Uplink() throws InterruptedException {
         //Measurements
         try {
             //Uplink App
             dataIn.readByte();
-            for (int p = 0; p < 10; p++) {
+            for (int p = 1; p < 11; p++) {
+                //Constants.PACKET_GAP = 1000000 * p; //1sec x p
+                //System.out.println("PACKET_GAP=" + Constants.PACKET_GAP);
+                Constants.PACKETSIZE_UPLINK = 512*p;
+                System.out.println("PACKET_SIZE=" + Constants.PACKETSIZE_UPLINK);
                 dataIn.readByte();
                 uplink_Client_snd();
-                FirstFragment.progressBar.incrementProgressBy(10);
             }
-            FirstFragment.progressBar.setProgress(0);
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
@@ -300,6 +304,7 @@ public class Connection extends Thread {
                 dataOut.writeInt(this.ID);
                 Thread c = new Connection(this.ID, s_down, this.dataMeasurement, isNagleDisable);
                 c.start();
+                c.join();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -307,21 +312,17 @@ public class Connection extends Thread {
 
     }
 
-    private void Method_PT_Downlink() {
+    private void Method_PT_Downlink() throws InterruptedException {
         //Measurements
         try {
             //Downlink App
-            FirstFragment.progressBar.setRotation(180);
             dataMeasurement.AvailableBW_Down.clear();
             dataIn.readByte();
-            for (int p = 0; p < 10; p++) {
+            for (int p = 1; p<11; p++) {
                 dataOut.writeByte(2);
                 double BW = downlink_Client_rcv();
                 dataMeasurement.AvailableBW_Down.add(BW);
-                FirstFragment.progressBar.incrementProgressBy(10);
             }
-            FirstFragment.progressBar.setRotation(0);
-            FirstFragment.progressBar.setProgress(0);
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
@@ -333,6 +334,7 @@ public class Connection extends Thread {
                 dataOut.writeInt(this.ID);
                 Thread c = new Connection(this.ID, s_report, this.dataMeasurement, isNagleDisable);
                 c.start();
+                c.join();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -343,7 +345,7 @@ public class Connection extends Thread {
     private void Method_PT_Report() {
         //Report Measurements - AvailableBW_down Vector
         try {
-            //Report AvailableBW_down 
+            //Report AvailableBW_down
             dataOut.writeByte(2);
             dataOut.writeInt(dataMeasurement.AvailableBW_Down.size());
             for (int k = 0; k < dataMeasurement.AvailableBW_Down.size(); k++) {
@@ -365,7 +367,6 @@ public class Connection extends Thread {
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
-            SecondFragment.isAlgorithmDone=true;
             System.err.println("Method_PT along with report is done!");
         }
     }
@@ -389,6 +390,7 @@ public class Connection extends Thread {
                 dataOut.writeInt(this.ID);
                 Thread c = new Connection(this.ID, s_down, this.dataMeasurement, isNagleDisable);
                 c.start();
+                c.join();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -405,6 +407,7 @@ public class Connection extends Thread {
             dataIn.readByte();
             long end = System.currentTimeMillis() + runningTime;
             downlink_Client_rcvInSeconds(end);
+
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
@@ -416,6 +419,7 @@ public class Connection extends Thread {
                 dataOut.writeInt(this.ID);
                 Thread c = new Connection(this.ID, s_report, this.dataMeasurement, isNagleDisable);
                 c.start();
+                c.join();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -423,9 +427,9 @@ public class Connection extends Thread {
     }
 
     private void Method_MV_Report_Client() {
-        //Report 1secBytes Vector, sending size first 
+        //Report 1secBytes Vector, sending size first
         try {
-            //Report MV_Downlink 
+            //Report MV_Downlink
             dataOut.writeByte(3);
             dataOut.writeInt(dataMeasurement.SampleSecond_down.size());
             for (int k = 0; k < dataMeasurement.SampleSecond_down.size(); k++) {
@@ -447,8 +451,7 @@ public class Connection extends Thread {
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
-            SecondFragment.isAlgorithmDone=true;
-            System.err.println("Method_MV_Client along with Report is done!");
+            System.out.println("Method_MV_Client along with Report is done!");
         }
     }
 
@@ -470,6 +473,7 @@ public class Connection extends Thread {
                 dataOut.writeInt(this.ID);
                 Thread c = new Connection(this.ID, s_down, this.dataMeasurement, isNagleDisable);
                 c.start();
+                c.join();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -496,6 +500,7 @@ public class Connection extends Thread {
                 dataOut.writeInt(this.ID);
                 Thread c = new Connection(this.ID, s_report, this.dataMeasurement, isNagleDisable);
                 c.start();
+                c.join();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -503,7 +508,7 @@ public class Connection extends Thread {
     }
 
     private void Method_MV_Report_readVector_Client() {
-        //Report 1secBytes Vector, sending size first 
+        //Report 1secBytes Vector, sending size first
         try {
             dataOut.writeByte(3);
             //Report MV_readVector_Downlink
@@ -529,8 +534,7 @@ public class Connection extends Thread {
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
-            SecondFragment.isAlgorithmDone=true;
-            System.err.println("Method_MV_readVector_Client along with Report is done!");
+            System.out.println("Method_MV_readVector_Client along with Report is done!");
         }
     }
 }

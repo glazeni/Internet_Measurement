@@ -29,16 +29,6 @@ public class TCPClient extends AsyncTask {
     }
 
 
-  /*  public void run() {
-        try {
-
-            System.err.println("Client started connected to Port: " + Constants.SERVERPORT + "\n");
-        } catch (Exception ex) {
-            System.err.println("Client connection error: " + ex.getMessage());
-        }
-    }
-*/
-
     @Override
     protected Void doInBackground(Object... params) {
         try {
@@ -67,12 +57,15 @@ public class TCPClient extends AsyncTask {
             dos.writeInt(Constants.SOCKET_SNDBUF);
             dos.flush();
             System.err.println("isNagleDisable: " + isNagleDisable);
-            connection = new Connection(ID, s_up, dataMeasurement,isNagleDisable);
+            connection = new Connection(ID, s_up, dataMeasurement, isNagleDisable);
             connection.start();
+            connection.join();
+
+            System.out.println("Client started connected to Port: " + Constants.SERVERPORT + "\n");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;
     }
-    
+
 }

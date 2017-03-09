@@ -48,18 +48,20 @@ public class RTInputStream extends FilterInputStream {
 
     public double getBitsConversion() {
         double bits = bytesTotal * 8;
-        if (bits > 1000000) {
-            bits = bits / 1000000;
-            //SecondFragment.tvGraphYLabel.setText("Bandwidth [MBits]");
-            return bits;
+//        if (bits > 1000000) {
+//            bits = bits / 1000000;
+//            //SecondFragment.tvGraphYLabel.setText("Bandwidth [MBits]");
+//            return bits;
 //        }else if(bits>1000){
 //            bits = bits/1000;
 //            //SecondFragment.tvGraphYLabel.setText("Bandwidth [KBits]");
 //            return bits;
-        } else {
-            return bits;
-        }
+//        } else {
+        bits = bits / 1000000;
+        return bits;
     }
+
+
 
     public void clearBytes() {
         bytesTotal = 0;
